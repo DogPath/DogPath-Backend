@@ -22,11 +22,19 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
+
+    //DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.1.0'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation group: 'org.hibernate', name: 'hibernate-spatial', version: '6.2.2.Final'
+
+    //Util
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    //Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
