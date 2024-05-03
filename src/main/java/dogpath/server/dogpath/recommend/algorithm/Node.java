@@ -5,12 +5,11 @@ import lombok.ToString;
 
 import java.awt.geom.Point2D;
 
+import static dogpath.server.dogpath.recommend.algorithm.GeoMovement.MOVE_50M;
+
 @Getter
 @ToString
 public class Node {
-
-    private static final double LAT_MOVE_50M = 0.00045050;
-    private static final double LNG_MOVE_50M = 0.00056597;
     Point2D.Double centerPoint;
     Point2D.Double leftTopPoint;
     Point2D.Double rightTopPoint;
@@ -30,16 +29,16 @@ public class Node {
         this.centerPoint = new Point2D.Double(centerLat, centerLng);
 
         // 중심으로부터 북서쪽: 위도 증가, 경도 감소
-        this.leftTopPoint = new Point2D.Double(centerLat + LAT_MOVE_50M, centerLng - LNG_MOVE_50M);
+        this.leftTopPoint = new Point2D.Double(centerLat + MOVE_50M.getLatChangeVal(), centerLng - MOVE_50M.getLngChangeVal());
 
         // 중심으로부터 북동쪽: 위도 증가, 경도 증가
-        this.rightTopPoint = new Point2D.Double(centerLat + LAT_MOVE_50M, centerLng + LNG_MOVE_50M);
+        this.rightTopPoint = new Point2D.Double(centerLat + MOVE_50M.getLatChangeVal(), centerLng + MOVE_50M.getLngChangeVal());
 
         // 중심으로부터 남서쪽: 위도 감소, 경도 감소
-        this.leftBottomPoint = new Point2D.Double(centerLat - LAT_MOVE_50M, centerLng - LNG_MOVE_50M);
+        this.leftBottomPoint = new Point2D.Double(centerLat - MOVE_50M.getLatChangeVal(), centerLng - MOVE_50M.getLngChangeVal());
 
         // 중심으로부터 남동쪽: 위도 감소, 경도 증가
-        this.rightBottomPoint = new Point2D.Double(centerLat - LAT_MOVE_50M, centerLng + LNG_MOVE_50M);
+        this.rightBottomPoint = new Point2D.Double(centerLat - MOVE_50M.getLatChangeVal(), centerLng + MOVE_50M.getLngChangeVal());
 
     }
 }
