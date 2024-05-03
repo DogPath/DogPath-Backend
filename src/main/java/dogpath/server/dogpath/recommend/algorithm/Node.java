@@ -11,10 +11,10 @@ import static dogpath.server.dogpath.recommend.algorithm.GeoMovement.MOVE_50M;
 @ToString
 public class Node {
     Point2D.Double centerPoint;
-    Point2D.Double leftTopPoint;
-    Point2D.Double rightTopPoint;
-    Point2D.Double leftBottomPoint;
-    Point2D.Double rightBottomPoint;
+    Point2D.Double topLeftPoint;
+    Point2D.Double topRightPoint;
+    Point2D.Double bottomLeftPoint;
+    Point2D.Double bottomRightPoint;
     double score;
     double heuristicDistance;
 
@@ -29,16 +29,16 @@ public class Node {
         this.centerPoint = new Point2D.Double(centerLat, centerLng);
 
         // 중심으로부터 북서쪽: 위도 증가, 경도 감소
-        this.leftTopPoint = new Point2D.Double(centerLat + MOVE_50M.getLatChangeVal(), centerLng - MOVE_50M.getLngChangeVal());
+        this.topLeftPoint = new Point2D.Double(centerLat + MOVE_50M.getLatChangeVal(), centerLng - MOVE_50M.getLngChangeVal());
 
         // 중심으로부터 북동쪽: 위도 증가, 경도 증가
-        this.rightTopPoint = new Point2D.Double(centerLat + MOVE_50M.getLatChangeVal(), centerLng + MOVE_50M.getLngChangeVal());
+        this.topRightPoint = new Point2D.Double(centerLat + MOVE_50M.getLatChangeVal(), centerLng + MOVE_50M.getLngChangeVal());
 
         // 중심으로부터 남서쪽: 위도 감소, 경도 감소
-        this.leftBottomPoint = new Point2D.Double(centerLat - MOVE_50M.getLatChangeVal(), centerLng - MOVE_50M.getLngChangeVal());
+        this.bottomLeftPoint = new Point2D.Double(centerLat - MOVE_50M.getLatChangeVal(), centerLng - MOVE_50M.getLngChangeVal());
 
         // 중심으로부터 남동쪽: 위도 감소, 경도 증가
-        this.rightBottomPoint = new Point2D.Double(centerLat - MOVE_50M.getLatChangeVal(), centerLng + MOVE_50M.getLngChangeVal());
+        this.bottomRightPoint = new Point2D.Double(centerLat - MOVE_50M.getLatChangeVal(), centerLng + MOVE_50M.getLngChangeVal());
 
     }
 }
