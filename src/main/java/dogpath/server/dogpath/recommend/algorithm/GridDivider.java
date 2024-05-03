@@ -1,12 +1,13 @@
 package dogpath.server.dogpath.recommend.algorithm;
 
+import dogpath.server.dogpath.recommend.algorithm.enums.WalkLength;
 import lombok.ToString;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dogpath.server.dogpath.recommend.algorithm.GeoMovement.*;
+import static dogpath.server.dogpath.recommend.algorithm.enums.GeoMovement.*;
 
 @ToString
 public class GridDivider {

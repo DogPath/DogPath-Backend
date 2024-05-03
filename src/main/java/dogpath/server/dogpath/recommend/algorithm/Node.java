@@ -5,7 +5,7 @@ import lombok.ToString;
 
 import java.awt.geom.Point2D;
 
-import static dogpath.server.dogpath.recommend.algorithm.GeoMovement.MOVE_50M;
+import static dogpath.server.dogpath.recommend.algorithm.enums.GeoMovement.MOVE_50M;
 
 @Getter
 @ToString

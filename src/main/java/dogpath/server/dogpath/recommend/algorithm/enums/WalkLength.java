@@ -1,4 +1,4 @@
-package dogpath.server.dogpath.recommend.algorithm;
+package dogpath.server.dogpath.recommend.algorithm.enums;
 
 public enum WalkLength {
     SHORT(10),
