@@ -7,5 +7,6 @@ import org.locationtech.jts.geom.Point;
 @MappedSuperclass
 public abstract class BaseDataEntity {
 
-    private Point coordinate;
+    private Double latitude;
+    private Double longitude;
 }
