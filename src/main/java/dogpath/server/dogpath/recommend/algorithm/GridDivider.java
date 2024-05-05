@@ -1,24 +1,15 @@
 package dogpath.server.dogpath.recommend.algorithm;
 
 import dogpath.server.dogpath.recommend.algorithm.enums.WalkLength;
-import lombok.ToString;
+import org.springframework.stereotype.Component;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
 import static dogpath.server.dogpath.recommend.algorithm.enums.GeoMovement.*;
 
-@ToString
+@Component
 public class GridDivider {
-    private Point2D.Double centerPoint;
-    private WalkLength walkLength;
-
-    GridDivider(double centerLat, double centerLng, String walkLength) {
-        this.centerPoint = new Point2D.Double(centerLat, centerLng);
-        this.walkLength = WalkLength.valueOf(walkLength);
-    }
-
     /**
      * 1. 사용자 위치, 산책 길이를 통해 좌상단 노드의 중심 좌표를 구한다.
      * 2. 좌상단 노드를 생성하고 배열에 넣는다.
@@ -26,18 +17,17 @@ public class GridDivider {
      * 4. 노드를 모두 생성하고 배열을 리턴.
      */
 
-    private Node getTopLeftNode() {
+    private Node getTopLeftNode(double centerLat, double centerLng, WalkLength walkLength) {
         int count = walkLength.getValue() - 1;
-        Node node = new Node(centerPoint.x + MOVE_50M.getLatChangeVal() * count, centerPoint.y - MOVE_50M.getLngChangeVal() * count);
-        System.out.println(node.centerPoint);
-        return node;
-
+        return new Node(centerLat + MOVE_50M.getLatChangeVal() * count, centerLng - MOVE_50M.getLngChangeVal() * count);
     }
 
-    private List<Node> divideAreaIntoNodes() {
-        ArrayList<Node> nodes = new ArrayList<>();
 
-        Node topLeftNode = getTopLeftNode();
+    public List<Node> divideAreaIntoNodes(double centerLat, double centerLng, String walk) {
+        ArrayList<Node> nodes = new ArrayList<>();
+        WalkLength walkLength = WalkLength.valueOf(walk);
+        Node topLeftNode = getTopLeftNode(centerLat, centerLng, walkLength);
+
         double lat = topLeftNode.centerPoint.x;
         double lng = topLeftNode.centerPoint.y;
 
@@ -53,14 +43,6 @@ public class GridDivider {
         }
         return nodes;
     }
-
-
-//    public static void main(String[] args) {
-//        GridDivider gridDivider = new GridDivider(37.540861, 127.071292, "MEDIUM");
-//        List<Node> nodes = gridDivider.divideAreaIntoNodes();
-//        CSVUtils.createCSV(nodes);
-//        System.out.println(nodes.size());
-//    }
 
 
 }
