@@ -16,6 +16,4 @@ public class ParkingLot extends BaseDataEntity{
     @Column(name = "parking_lot_id")
     private Long id;
 
-    @Column(length = 200)
-    private String name;
 }

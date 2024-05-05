@@ -18,4 +18,16 @@ public class Facility extends BaseDataEntity{
 
     @Column(length = 200)
     private String name;
+
+    @Column(length = 200)
+    private String category;
+
+    // 휴업일
+    @Column
+    private String rest;
+
+    // 운영 시간
+    @Column(name= "oper_time", length = 255)
+    private String operationTime;
+
 }
