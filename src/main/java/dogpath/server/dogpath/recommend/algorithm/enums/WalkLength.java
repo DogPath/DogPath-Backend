@@ -1,9 +1,13 @@
 package dogpath.server.dogpath.recommend.algorithm.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum WalkLength {
-    SHORT(10),
-    MEDIUM(20),
-    LONG(40);
+    // Value의 의미: 한 변에 포함되는 Node의 개수
+    SHORT(5),
+    MEDIUM(10),
+    LONG(20);
 
     private final int value;
 
@@ -11,7 +15,4 @@ public enum WalkLength {
         this.value = value;
     }
 
-    public int getValue() {
-        return value;
-    }
 }
