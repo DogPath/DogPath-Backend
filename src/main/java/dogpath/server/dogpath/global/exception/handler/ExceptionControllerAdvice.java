@@ -1,9 +1,7 @@
 package dogpath.server.dogpath.global.exception.handler;
 
-import com.example.memotion.common.dto.BaseResponse;
-import com.example.memotion.common.dto.ResponseStatus;
-import com.example.memotion.common.exception.NotFoundDiaryException;
-import com.example.memotion.common.exception.NotFoundMemberException;
+import dogpath.server.dogpath.global.dto.BaseResponse;
+import dogpath.server.dogpath.global.dto.ResponseStatus;
 import dogpath.server.dogpath.global.exception.DogPathException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
