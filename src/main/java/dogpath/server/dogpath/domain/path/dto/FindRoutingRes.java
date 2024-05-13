@@ -1,10 +1,10 @@
 package dogpath.server.dogpath.domain.path.dto;
 
+import dogpath.server.dogpath.domain.path.algorithm.Node;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.data.geo.Point;
 
-import java.awt.geom.Point2D;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -22,10 +22,13 @@ public class FindRoutingRes {
         this.time = time;
     }
 
-    public static FindRoutingRes from(Double distance, List<Point> routeCoordinates, LocalTime time) {
+    public static FindRoutingRes from(Double distance, List<Node> routeCoordinates, LocalTime time) {
+        List<Point> points = routeCoordinates.stream()
+                .map(Node::getCenterPoint)
+                .toList();
         return FindRoutingRes.builder()
                 .distance(distance)
-                .routeCoordinates(routeCoordinates)
+                .routeCoordinates(points)
                 .time(time)
                 .build();
     }

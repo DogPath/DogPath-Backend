@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.geo.Point;
 
-import java.awt.geom.Point2D;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
