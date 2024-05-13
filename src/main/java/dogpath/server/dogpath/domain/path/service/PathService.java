@@ -2,6 +2,7 @@ package dogpath.server.dogpath.domain.path.service;
 
 import dogpath.server.dogpath.domain.path.algorithm.Node;
 import dogpath.server.dogpath.domain.path.algorithm.Range;
+import dogpath.server.dogpath.domain.path.algorithm.RouteInfo;
 import dogpath.server.dogpath.domain.path.algorithm.ScoreCalculator;
 import dogpath.server.dogpath.domain.path.algorithm.SearchAlgorithm;
 import dogpath.server.dogpath.domain.path.algorithm.enums.AllowanceDistance;
@@ -16,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
-import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class PathService {
     private final ScoreCalculator scoreCalculator;
     private final SearchAlgorithm searchAlgorithm;
 
-    public List<FindRoutingRes> findRoute(FindRoutingReq findRoutingReq) {
+    public List<FindRoutingRes> findRoute(FindRoutingReq findRoutingReq) throws IOException {
         List<FindRoutingRes> findRoutingResList = new ArrayList<>();
         Point userCoordinate = findRoutingReq.getUserCoordinate();
         String walkTime = findRoutingReq.getWalkTime();
@@ -41,7 +42,7 @@ public class PathService {
 
         //3개의 리스트 탐색해야 함.
         while (!isCompletedGeneratedRoutes(findRoutingResList)) {
-            FindRoutingRes findRoutingRes = generateRoute(walkLength, calculatedNodes);
+            FindRoutingRes findRoutingRes = generateRoute(findRoutingReq.getUserCoordinate(), walkLength, calculatedNodes);
             findRoutingResList.add(findRoutingRes);
         }
         return findRoutingResList;
@@ -49,13 +50,13 @@ public class PathService {
 
     //길 생성 메소드
     //노드 리스트, 거리, 산책 시간 출력
-    private FindRoutingRes generateRoute(WalkLength walkLength, List<Node> calculatedNodes) {
+    private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, List<Node> calculatedNodes) throws IOException {
         while (true) {
-            List<Point> routeCoordinates = searchAlgorithm.findRouteByHeuristic(calculatedNodes);
-            Double distance = searchAlgorithm.getDistanceByRouteCoordinates(routeCoordinates);
-            if (isAvailableDistance(walkLength, distance)) {
-                LocalTime time = searchAlgorithm.getTimeByRouteCoordinates(routeCoordinates);
-                return FindRoutingRes.from(distance, routeCoordinates, time);
+            //TODO : Node로 변경하는게 맞는지??, 애초에 시작 노드를 만들어서 노드 정보에 추가하는게 맞지 않나 생각중
+            Node userCoordinateNode = new Node(userCoordinate.getX(), userCoordinate.getY());
+            RouteInfo routeInfo = searchAlgorithm.findRouteByHeuristic(userCoordinateNode, calculatedNodes);
+            if (isAvailableDistance(walkLength, routeInfo.getDistance())) {
+                return FindRoutingRes.from(routeInfo.getDistance(), routeInfo.getRouteCoordinates(), routeInfo.getTime());
             }
         }
     }
