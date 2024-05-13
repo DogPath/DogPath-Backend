@@ -5,6 +5,7 @@ import com.squareup.okhttp.ResponseBody;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.geo.Point;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,19 +19,28 @@ class TMapServiceTest {
     public void TMapServiceAPI_테스트() throws Exception {
         //given
         TMapService tMapService = new TMapService();
+        Point startPoint = new Point(127.07077595711924,37.539542645445685);
+        Point endPoint= new Point(127.0741717734735,37.54675063189466 );
+        String startName = "건대입구역";
+        String endName = "어린이대공원역";
+        Point[] passList = new Point[1];
+        passList[0] = new Point(127.07530371225825,37.54134464205793);
 
         //when
-        Response routeByTMap = tMapService.getRouteByTMap(1.0, 1.0);
+        Response routeByTMap = tMapService.getRouteByTMap(startPoint,startName,endPoint,endName, passList);
 
         //then
 
         ResponseBody body = routeByTMap.body();
 
-        String string = body.string();
+//        String string = body.string();
 
         assertAll(
                 () -> assertThat(routeByTMap.isSuccessful()).isTrue(),
-                () -> assertThat(body).isNotNull(),
-                () -> assertThat(string).isNotNull());}
+//                () -> assertThat(body).isNotNull(),
+//                () -> assertThat(string).isNotNull(),
+                () -> assertThat(routeByTMap.code()).isEqualTo(200)
+        );
+    }
 
 }

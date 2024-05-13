@@ -5,19 +5,35 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 @Service
+@Slf4j
 public class TMapService {
 
     @Value("${tmap.app.key}")
     public static String APP_KEY;
-
-    public Response getRouteByTMap(double startX, double startY) throws IOException {
+    public static String bodyFormat = "{" +
+            "\"startX\":%f," +
+            "\"startY\":%f," +
+            "\"endX\":%f," +
+            "\"endY\":%f," +
+            "\"passList\":\"%s\"," +
+            "\"reqCoordType\":\"WGS84GEO\"," +
+            "\"startName\":\"%s\"," +
+            "\"endName\":\"%s\"," +
+            "\"searchOption\":\"0\"," +
+            "\"resCoordType\":\"WGS84GEO\"," +
+            "\"sort\":\"index\"" +
+            "}";
+    public Response getRouteByTMap(Point startPoint, String startName, Point endPoint, String endName, Point[] passList) throws IOException {
         OkHttpClient client = new OkHttpClient();
         /*
             startX : 출발지X좌표(경도)
@@ -33,23 +49,14 @@ public class TMapService {
             sort : 정렬 - index(기본값), custom(라인노드, 포인트노드의 순서로 정렬)
 
          */
-
         Point point = new Point(1.0,2.0);
+
+        String encodedStartName = StandardCharsets.UTF_8.encode(startName).toString();
+        String encodedEndName = StandardCharsets.UTF_8.encode(endName).toString();
+
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType,
-                "{" +
-                        "\"startX\":126.92365493654832," +
-                        "\"startY\":37.556770374096615," +
-                        "\"endX\":126.92432158129688," +
-                        "\"endY\":37.55279861528311," +
-                        "\"passList\":\"126.92774822,37.55395475_126.92577620,37.55337145\"," +
-                        "\"reqCoordType\":\"WGS84GEO\"," +
-                        "\"startName\":\"%EC%B6%9C%EB%B0%9C\"," +
-                        "\"endName\":\"%EB%8F%84%EC%B0%A9\"," +
-                        "\"searchOption\":\"0\"," +
-                        "\"resCoordType\":\"WGS84GEO\"," +
-                        "\"sort\":\"index\"" +
-                        "}"
+                makeBody(startPoint, encodedStartName, endPoint, encodedEndName, passList)
         );
         Request request = new Request.Builder()
                 .url("https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&callback=function")
@@ -60,6 +67,33 @@ public class TMapService {
                 .build();
 
         Response response = client.newCall(request).execute();
+        log.info("RESPONSE CODE : " + response.code());
+        log.info("RESPONSE MESSAGE: " + response.body().string());
         return response;
+    }
+
+    private String makeBody(Point startPoint, String startName, Point endPoint, String endName, Point[] passList) {
+        String passListString = getPassListBodyString(passList);
+        return String.format(bodyFormat,
+                startPoint.getX(),
+                startPoint.getY(),
+                endPoint.getX(),
+                endPoint.getY(),
+                passListString,
+                startName,
+                endName);
+    }
+
+    private String getPassListBodyString(Point[] passList) {
+        StringBuffer sb = new StringBuffer();
+        Arrays.stream(passList)
+                .forEach(point -> {
+                    sb.append(point.getX())
+                            .append(",")
+                            .append(point.getY())
+                            .append("_");
+                });
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 }
