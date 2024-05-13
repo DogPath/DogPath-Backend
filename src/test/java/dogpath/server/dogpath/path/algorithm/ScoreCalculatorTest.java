@@ -41,7 +41,7 @@ class ScoreCalculatorTest {
 
         System.out.println(nodes.size());
         for (Node node : nodes) {
-            System.out.println(node.centerPoint + " " + node.score);
+            System.out.println(node.getCenterPoint() + " " + node.getScore());
         }
     }
 }
