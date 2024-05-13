@@ -28,8 +28,8 @@ public class GridDivider {
         WalkLength walkLength = WalkLength.valueOf(walk);
         Node topLeftNode = getTopLeftNode(centerLat, centerLng, walkLength);
 
-        double lat = topLeftNode.centerPoint.x;
-        double lng = topLeftNode.centerPoint.y;
+        double lat = topLeftNode.centerPoint.getX();
+        double lng = topLeftNode.centerPoint.getY();
 
         for (int i = 0; i < walkLength.getValue(); i++) {
 
@@ -39,7 +39,7 @@ public class GridDivider {
             }
 
             lat -= GeoMovement.MOVE_100M.getLatChangeVal();
-            lng = topLeftNode.centerPoint.y;
+            lng = topLeftNode.centerPoint.getY();
         }
         return nodes;
     }

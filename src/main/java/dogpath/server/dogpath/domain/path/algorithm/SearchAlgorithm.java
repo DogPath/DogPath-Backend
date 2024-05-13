@@ -1,6 +1,7 @@
 package dogpath.server.dogpath.domain.path.algorithm;
 
 
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 
 import java.awt.geom.Point2D;
@@ -9,13 +10,15 @@ import java.util.List;
 
 @Component
 public class SearchAlgorithm {
-    public List<Point2D.Double> findRouteByHeuristic(List<Node> calculatedNodes) {
-    }
-
-    public Double getDistanceByRouteCooridnates(List<Point2D.Double> routeCoordinates) {
+    public List<Point> findRouteByHeuristic(List<Node> calculatedNodes) {
         return null;
     }
 
-    public LocalTime getTimeByRouteCoordinates(List<Point2D.Double> routeCoordinates) {
+    public Double getDistanceByRouteCoordinates(List<Point> routeCoordinates) {
+        return null;
+    }
+
+    public LocalTime getTimeByRouteCoordinates(List<Point> routeCoordinates) {
+        return null;
     }
 }

@@ -3,6 +3,7 @@ package dogpath.server.dogpath.domain.path.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.geo.Point;
 
 import java.awt.geom.Point2D;
 
@@ -10,6 +11,6 @@ import java.awt.geom.Point2D;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindRoutingReq {
-    private Point2D.Double userCoordinate;
+    private Point userCoordinate;
     private String walkTime;
 }

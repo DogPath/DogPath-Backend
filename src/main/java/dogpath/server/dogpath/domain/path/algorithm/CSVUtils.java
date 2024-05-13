@@ -19,7 +19,7 @@ public class CSVUtils {
             for (Object node : nodes) {
                 Node next = (Node) node;
 
-                fw.write(next.centerPoint.x + "," + next.centerPoint.y);
+                fw.write(next.centerPoint.getX() + "," + next.centerPoint.getY());
                 fw.newLine();
                 resCnt++;
 

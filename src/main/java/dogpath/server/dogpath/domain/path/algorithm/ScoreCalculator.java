@@ -83,8 +83,8 @@ public class ScoreCalculator {
     }
 
     private boolean inRange(Node node, BaseDataEntity entity) {
-        boolean isLatInRange = node.bottomRightPoint.x <= entity.getLatitude() && entity.getLatitude() <= node.topLeftPoint.x;
-        boolean isLngInRange = node.topLeftPoint.y <= entity.getLongitude() && entity.getLongitude() <= node.bottomRightPoint.y;
+        boolean isLatInRange = node.bottomRightPoint.getX() <= entity.getLatitude() && entity.getLatitude() <= node.topLeftPoint.getX();
+        boolean isLngInRange = node.topLeftPoint.getY() <= entity.getLongitude() && entity.getLongitude() <= node.bottomRightPoint.getY();
 
         return isLatInRange && isLngInRange;
     }
