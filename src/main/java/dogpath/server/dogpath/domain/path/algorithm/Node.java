@@ -2,13 +2,10 @@ package dogpath.server.dogpath.domain.path.algorithm;
 
 import dogpath.server.dogpath.domain.path.algorithm.enums.GeoMovement;
 import lombok.Getter;
-import lombok.ToString;
 import org.springframework.data.geo.Point;
 
-import java.awt.geom.Point2D;
 
 @Getter
-//@ToString
 public class Node {
     Point centerPoint;
     Point topLeftPoint;
@@ -17,12 +14,16 @@ public class Node {
     Point bottomRightPoint;
     double score;
     double heuristicDistance;
+    boolean isVisited;
+    boolean isPassingNode;
 
     // 중심 좌표를 생성자에서 입력 받으면 100m * 100m 노드 생성
-    Node(double lat, double lng) {
+    public Node(double lat, double lng) {
         calculateNodeArea(lat, lng);
         this.score = 0.0;
         this.heuristicDistance = 0.0;
+        isVisited = false;
+        isPassingNode = false;
     }
 
     private void calculateNodeArea(double centerLat, double centerLng) {
