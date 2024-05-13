@@ -1,7 +1,9 @@
 package dogpath.server.dogpath.path.algorithm;
 
-import dogpath.server.dogpath.path.algorithm.enums.Weight;
-import dogpath.server.dogpath.path.domain.BaseDataEntity;
+import dogpath.server.dogpath.domain.path.algorithm.Node;
+import dogpath.server.dogpath.domain.path.algorithm.ScoreCalculator;
+import dogpath.server.dogpath.domain.path.algorithm.enums.Weight;
+import dogpath.server.dogpath.domain.path.domain.BaseDataEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
