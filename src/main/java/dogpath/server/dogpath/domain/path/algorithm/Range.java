@@ -1,5 +1,6 @@
 package dogpath.server.dogpath.domain.path.algorithm;
 
+import dogpath.server.dogpath.domain.path.algorithm.enums.AllowanceDistance;
 import dogpath.server.dogpath.domain.path.algorithm.enums.WalkLength;
 import lombok.AllArgsConstructor;
 
