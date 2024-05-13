@@ -1,7 +1,8 @@
 package dogpath.server.dogpath.recommend.repository;
 
 
-import dogpath.server.dogpath.recommend.domain.Cctv;
+import dogpath.server.dogpath.domain.recommend.domain.Cctv;
+import dogpath.server.dogpath.domain.recommend.repository.CctvRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
