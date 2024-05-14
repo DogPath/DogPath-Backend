@@ -34,7 +34,7 @@ class ScoreCalculatorTest {
     void calculateNodeScore() {
         weightDataHashMap = scoreCalculator.getWeightDataFromRepository();
         scoreCalculator.calculateNodeScore(weightDataHashMap);
-        nodes = scoreCalculator.getNodes();
+        nodes = scoreCalculator.getBoard().getAllNodes();
 
         assertThat(weightDataHashMap.get(Weight.CCTV).isEmpty()).isEqualTo(false);
 
