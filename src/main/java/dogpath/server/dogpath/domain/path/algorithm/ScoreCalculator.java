@@ -37,11 +37,11 @@ public class ScoreCalculator {
 
     private final GridDivider gridDivider;
 
-    private List<Node> nodes;
+    private Board board;
 
 
     public void initData(double lat, double lng, String walk) {
-        nodes = gridDivider.divideAreaIntoNodes(lat, lng, walk);
+        board = gridDivider.divideAreaIntoNodes(lat, lng, walk);
     }
 
     public HashMap<Weight, List<? extends BaseDataEntity>> getWeightDataFromRepository() {
@@ -63,6 +63,7 @@ public class ScoreCalculator {
     //TODO: 로직 수정 or 리팩토링 필요 (score가 private하지 않아야 작동 가능한 로직)
     public void calculateNodeScore(HashMap<Weight, List<? extends BaseDataEntity>> data) {
         double score;
+        List<Node> nodes = board.getAllNodes();
         for (Node node : nodes) {
             score = 0.0;
 

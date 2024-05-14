@@ -18,7 +18,7 @@ public class SearchAlgorithm {
 
     private final TMapService tMapService;
 
-    public RouteInfo findRouteByHeuristic(Node startNode, List<Node> calculatedNodes) throws IOException {
+    public RouteInfo findRouteByHeuristic(Node startNode, Board calculatedBoard) throws IOException {
         /*
          * step 1 : 상위 30% value 노드 들 중 3개의 경유지 선정
          * step 2 : 경유지 순서 정하기.(value 높은순? or else)
@@ -30,18 +30,19 @@ public class SearchAlgorithm {
         List<Point> routePoints = new ArrayList<>();
 
         //step 1
-        calculatedNodes.sort((node1, node2) -> {
+        List<Node> nodes = calculatedBoard.getAllNodes();
+        nodes.sort((node1, node2) -> {
             if (node1.getScore() > node2.getScore()) return -1;
             else return 1;
         });
-        List<Node> top30ratioNodes = calculatedNodes.subList(0, (int) (routePoints.size() * 0.3));
+        List<Node> top30ratioNodes = nodes.subList(0, (int) (routePoints.size() * 0.3));
 
         //경유지 목록 생성
         //TODO : 경유지 순서는 어떻게 하지?
         List<Node> passingNodes = getPassingNodes(top30ratioNodes);
 
         //step3, step4 : 3개의 경유지, 1개의 출발지겸 목적지 총 5개의 노드로 전체 경로 생성하여 routeinfo내 저장
-        RouteInfo routeInfo = makeRoute(calculatedNodes, startNode, passingNodes);
+        RouteInfo routeInfo = makeRoute(calculatedBoard, startNode, passingNodes);
 
 
         //step5 :routeinfo에 있는 List<Node> 기반으로 tmapService 사용하여 결과값 가져와서 response 객체 저장
@@ -112,16 +113,16 @@ public class SearchAlgorithm {
 
     /**
      * 시작지와 경유지 목록을 넛어서 4개의 구간 만든 후 하나의 노드 리스트로 반환
-     * @param calculatedNodes 전체 Board
+     * @param calculatedBoard 전체 Board
      * @param startNode
      * @param passingNode
      * @return
      */
-    private RouteInfo makeRoute(List<Node> calculatedNodes,Node startNode, List<Node> passingNode) {
+    private RouteInfo makeRoute(Board calculatedBoard,Node startNode, List<Node> passingNode) {
         List<Node> routeCoordinates = new ArrayList<>();
         passingNode.add(0, startNode);
         for (int i = 0; i < passingNode.size(); i++) {
-            List<Node> sectionRoute = getSectionRoute(calculatedNodes, passingNode.get(i), passingNode.get(i+1));
+            List<Node> sectionRoute = getSectionRoute(calculatedBoard, passingNode.get(i), passingNode.get(i+1));
             routeCoordinates.addAll(sectionRoute);
         }
         return new RouteInfo(routeCoordinates);
@@ -129,12 +130,12 @@ public class SearchAlgorithm {
 
     /**
      * 출발지 목적지 두개의 인자를 받아 구간 경로 생성
-     * @param calculatedNodes 전체 Board
+     * @param calculatedBoard 전체 Board
      * @param startNode 시작점
      * @param endNode 도착점(경유지 or 마지막 도착지)
      * @return
      */
-    private List<Node> getSectionRoute(List<Node> calculatedNodes, Node startNode, Node endNode) {
+    private List<Node> getSectionRoute(Board calculatedBoard, Node startNode, Node endNode) {
         //TODO : ㄹㅇ 휴리스틱 알고리즘으로 출발지, 목적지, 근처 노드를 계산해서 돌리면 됨.
         List<Node> sectionNodes = new ArrayList<>();
 

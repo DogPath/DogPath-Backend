@@ -23,8 +23,8 @@ public class GridDivider {
     }
 
 
-    public List<Node> divideAreaIntoNodes(double centerLat, double centerLng, String walk) {
-        ArrayList<Node> nodes = new ArrayList<>();
+    public Board divideAreaIntoNodes(double centerLat, double centerLng, String walk) {
+        List<Node> nodes = new ArrayList<>();
         WalkLength walkLength = WalkLength.valueOf(walk);
         Node topLeftNode = getTopLeftNode(centerLat, centerLng, walkLength);
 
@@ -41,7 +41,7 @@ public class GridDivider {
             lat -= GeoMovement.MOVE_100M.getLatChangeVal();
             lng = topLeftNode.centerPoint.getY();
         }
-        return nodes;
+        return Board.of(nodes, walkLength);
     }
 
 

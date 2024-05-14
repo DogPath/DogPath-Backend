@@ -1,5 +1,6 @@
 package dogpath.server.dogpath.domain.path.service;
 
+import dogpath.server.dogpath.domain.path.algorithm.Board;
 import dogpath.server.dogpath.domain.path.algorithm.Node;
 import dogpath.server.dogpath.domain.path.algorithm.Range;
 import dogpath.server.dogpath.domain.path.algorithm.RouteInfo;
@@ -18,7 +19,6 @@ import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,11 +38,11 @@ public class PathService {
         String walkTime = findRoutingReq.getWalkTime();
         WalkLength walkLength = WalkLength.valueOf(walkTime);
 
-        List<Node> calculatedNodes = getCalculatedNodes(userCoordinate, walkLength);
+        Board calculatedBoard = getCalculatedBoard(userCoordinate, walkLength);
 
         //3개의 리스트 탐색해야 함.
         while (!isCompletedGeneratedRoutes(findRoutingResList)) {
-            FindRoutingRes findRoutingRes = generateRoute(findRoutingReq.getUserCoordinate(), walkLength, calculatedNodes);
+                FindRoutingRes findRoutingRes = generateRoute(findRoutingReq.getUserCoordinate(), walkLength, calculatedBoard);
             findRoutingResList.add(findRoutingRes);
         }
         return findRoutingResList;
@@ -50,7 +50,7 @@ public class PathService {
 
     //길 생성 메소드
     //노드 리스트, 거리, 산책 시간 출력
-    private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, List<Node> calculatedNodes) throws IOException {
+    private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, Board calculatedNodes) throws IOException {
         while (true) {
             //TODO : Node로 변경하는게 맞는지??, 애초에 시작 노드를 만들어서 노드 정보에 추가하는게 맞지 않나 생각중
             Node userCoordinateNode = new Node(userCoordinate.getX(), userCoordinate.getY());
@@ -75,10 +75,10 @@ public class PathService {
         return true;
     }
 
-    private List<Node> getCalculatedNodes(Point userCoordinate, WalkLength walkLength) {
+    private Board getCalculatedBoard(Point userCoordinate, WalkLength walkLength) {
         scoreCalculator.initData(userCoordinate.getX(), userCoordinate.getY(), walkLength.name());
         HashMap<Weight, List<? extends BaseDataEntity>> weightDataFromRepository = scoreCalculator.getWeightDataFromRepository();
         scoreCalculator.calculateNodeScore(weightDataFromRepository);
-        return scoreCalculator.getNodes();
+        return scoreCalculator.getBoard();
     }
 }
