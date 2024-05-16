@@ -29,11 +29,6 @@ public class PathController {
         return ResponseEntity.ok(pathService.findRoute(findRoutingReq));
     }
 
-    @PostMapping("/records")
-    public void getAllRecords(){
-        return;
-    }
-
     @DeleteMapping("/records/{recordId}")
     public void deleteRecord(){
         return;
