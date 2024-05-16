@@ -33,6 +33,8 @@ dependencies {
     //Util
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.7.5'
+
 
     //Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
