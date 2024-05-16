@@ -12,13 +12,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Walk extends BaseEntity {
 
     @Id
@@ -34,4 +38,12 @@ public class Walk extends BaseEntity {
     private User user;
 
     private String imageURL;
+
+    @Builder
+    public Walk(BigDecimal distance, String imageURL, LocalTime time, User user) {
+        this.distance = distance;
+        this.imageURL = imageURL;
+        this.time = time;
+        this.user = user;
+    }
 }
