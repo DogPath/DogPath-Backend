@@ -42,7 +42,7 @@ public class PathService {
 
         //3개의 리스트 탐색해야 함.
         while (!isCompletedGeneratedRoutes(findRoutingResList)) {
-                FindRoutingRes findRoutingRes = generateRoute(findRoutingReq.getUserCoordinate(), walkLength, calculatedBoard);
+            FindRoutingRes findRoutingRes = generateRoute(findRoutingReq.getUserCoordinate(), walkLength, calculatedBoard);
             findRoutingResList.add(findRoutingRes);
         }
         return findRoutingResList;
@@ -52,7 +52,9 @@ public class PathService {
     //노드 리스트, 거리, 산책 시간 출력
     private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, Board calculatedNodes) throws IOException {
         while (true) {
-            //TODO : Node로 변경하는게 맞는지??, 애초에 시작 노드를 만들어서 노드 정보에 추가하는게 맞지 않나 생각중
+            //TODO : 시작 노드(목적지가 될 노드)를 설정해주어야 함.
+            // 시작지(0,0)기준 근처 노드 중 가장 value가 큰 노드로 할 예정.(이걸 어케 정하누)
+            // Board 객체에 생성하는 메서드가 필요하지 않을까 생각
             Node userCoordinateNode = new Node(userCoordinate.getX(), userCoordinate.getY());
             RouteInfo routeInfo = searchAlgorithm.findRouteByHeuristic(userCoordinateNode, calculatedNodes);
             if (isAvailableDistance(walkLength, routeInfo.getDistance())) {

@@ -113,16 +113,18 @@ public class SearchAlgorithm {
 
     /**
      * 시작지와 경유지 목록을 넛어서 4개의 구간 만든 후 하나의 노드 리스트로 반환
-     * @param calculatedBoard 전체 Board
+     * @param board 전체 Board
      * @param startNode
      * @param passingNode
      * @return
      */
-    private RouteInfo makeRoute(Board calculatedBoard,Node startNode, List<Node> passingNode) {
+    private RouteInfo makeRoute(Board board, Node startNode, List<Node> passingNode) {
         List<Node> routeCoordinates = new ArrayList<>();
-        passingNode.add(0, startNode);
+        passingNode.add(0, startNode); // 출발지 노드로 사용
+        passingNode.add(startNode); // 목적지 노드로 사용
+
         for (int i = 0; i < passingNode.size(); i++) {
-            List<Node> sectionRoute = getSectionRoute(calculatedBoard, passingNode.get(i), passingNode.get(i+1));
+            List<Node> sectionRoute = getSectionRoute(board, passingNode.get(i), passingNode.get(i+1));
             routeCoordinates.addAll(sectionRoute);
         }
         return new RouteInfo(routeCoordinates);
@@ -130,15 +132,27 @@ public class SearchAlgorithm {
 
     /**
      * 출발지 목적지 두개의 인자를 받아 구간 경로 생성
-     * @param calculatedBoard 전체 Board
+     * @param board 전체 Board
      * @param startNode 시작점
      * @param endNode 도착점(경유지 or 마지막 도착지)
      * @return
      */
-    private List<Node> getSectionRoute(Board calculatedBoard, Node startNode, Node endNode) {
+    private List<Node> getSectionRoute(Board board, Node startNode, Node endNode) {
         //TODO : ㄹㅇ 휴리스틱 알고리즘으로 출발지, 목적지, 근처 노드를 계산해서 돌리면 됨.
         List<Node> sectionNodes = new ArrayList<>();
-
+        Node currentNode = startNode;
+        sectionNodes.add(startNode);
+        while (!currentNode.equals(endNode)) {
+            List<Node> neighborNode = board.getNeighborNodes(startNode); // 근처 8개 노드 가져옴)
+            currentNode = getNextNode(neighborNode); // 근처 노드들 중 다음 노드 선택(휴리스틱 알고리즘 통한 노드별 값 측정 및 비교)
+            sectionNodes.add(currentNode);
+        }
         return sectionNodes;
+    }
+
+    private Node getNextNode(List<Node> neighborNode) {
+        //TODO 8개의 노드들 중 어떤 노드 갈지 선택
+        // 방문하지 않은 노드들 중 계산
+        return new Node(0.1,0.1);
     }
 }

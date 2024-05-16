@@ -31,4 +31,9 @@ public class Board {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
+
+    public List<Node> getNeighborNodes(Node startNode) {
+        //TODO :주변 8방면 노드 가져옴
+        return new ArrayList<>();
+    }
 }
