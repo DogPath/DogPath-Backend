@@ -3,6 +3,8 @@ package dogpath.server.dogpath.domain.evaluation.domain;
 import dogpath.server.dogpath.global.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,4 +20,7 @@ public class Evaluation extends BaseEntity {
 
     @Column(length = 30)
     private String title;
+
+    @Enumerated(value = EnumType.STRING)
+    private EvaluationCategory category;
 }
