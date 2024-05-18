@@ -1,7 +1,7 @@
 package dogpath.server.dogpath.domain.evaluation.domain;
 
 import dogpath.server.dogpath.global.domain.BaseEntity;
-import dogpath.server.dogpath.domain.walklog.domain.Walk;
+import dogpath.server.dogpath.domain.walk.domain.Walk;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
