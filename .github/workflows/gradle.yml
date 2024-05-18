@@ -33,6 +33,7 @@ jobs:
     - name: Set application.yml for deployment
       run: |
         cd ./src/main/resources
+        sudo rm -rf ./application.yml
         touch ./application.yml
         
         echo "${{ secrets.DEPLOYMENT_YML }}" >> ./application.yml
