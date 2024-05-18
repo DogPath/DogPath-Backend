@@ -7,6 +7,5 @@ public class EvaluateRouteReq {
     private Long userId;
     private double distance;
     private String time;
-    private String routeImg;
     private String evaluations;
 }
