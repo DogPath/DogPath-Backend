@@ -1,4 +1,4 @@
-package dogpath.server.dogpath.domain.tmap;
+package dogpath.server.dogpath.global.tmap;
 
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;

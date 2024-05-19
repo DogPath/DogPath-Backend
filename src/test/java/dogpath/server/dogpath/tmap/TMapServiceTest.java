@@ -2,7 +2,7 @@ package dogpath.server.dogpath.tmap;
 
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
-import dogpath.server.dogpath.domain.tmap.TMapService;
+import dogpath.server.dogpath.global.tmap.TMapService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.geo.Point;
