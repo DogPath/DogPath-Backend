@@ -2,13 +2,12 @@ package dogpath.server.dogpath.domain.path.algorithm;
 
 
 import com.squareup.okhttp.Response;
-import dogpath.server.dogpath.domain.tmap.TMapService;
+import dogpath.server.dogpath.global.tmap.TMapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 

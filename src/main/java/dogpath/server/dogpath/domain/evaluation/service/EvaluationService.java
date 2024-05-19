@@ -5,7 +5,7 @@ import dogpath.server.dogpath.domain.evaluation.domain.WalkEvaluation;
 import dogpath.server.dogpath.domain.evaluation.dto.EvaluateRouteReq;
 import dogpath.server.dogpath.domain.evaluation.repository.EvaluationRepository;
 import dogpath.server.dogpath.domain.evaluation.repository.WalkEvaluationRepository;
-import dogpath.server.dogpath.domain.evaluation.s3.S3Service;
+import dogpath.server.dogpath.global.s3.S3Service;
 import dogpath.server.dogpath.domain.user.domain.Preference;
 import dogpath.server.dogpath.domain.user.domain.User;
 import dogpath.server.dogpath.domain.user.repository.PreferenceRepository;
