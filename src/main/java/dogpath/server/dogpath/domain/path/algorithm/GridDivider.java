@@ -34,7 +34,7 @@ public class GridDivider {
         for (int i = 0; i < walkLength.getValue(); i++) {
 
             for (int j = 0; j < walkLength.getValue(); j++) {
-                nodes.add(new Node(lat, lng));
+                nodes.add(new Node(lat, lng, i, j));
                 lng += GeoMovement.MOVE_100M.getLngChangeVal();
             }
 
