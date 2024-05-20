@@ -63,7 +63,6 @@ public class SearchAlgorithm {
      */
     private void setRouteInfoByTmap(RouteInfo routeInfo) throws IOException, ParseException {
         List<Node> routeCoordinates = routeInfo.getRouteCoordinates();
-        System.out.println(routeCoordinates.toString());
         //최대 5개 경유지 + 시작지 1 + 목적지 1 -> 7개 노드씩 TMap API 호출 가능
         for (int i = 0; i < routeCoordinates.size(); i += 6) {
             int startIdx = i;
@@ -207,7 +206,7 @@ public class SearchAlgorithm {
             }
 
             double fValue = node.getFValue(destination);
-            log.info(fValue + " " + nextNodeFValue);
+//            log.info(fValue + " " + nextNodeFValue);
             if (fValue < nextNodeFValue) {
                 nextNodeFValue = fValue;
                 nextNode = node;

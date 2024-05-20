@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 @Slf4j
 @Service
 @Transactional
@@ -51,7 +53,6 @@ public class PathService {
 //        while (!isCompletedGeneratedRoutes(findRoutingResList)) {
         for (int i = 0; i < 3; i++) {
             log.info(i + " LINE GENERATION START");
-            calculatedBoard.reset();
             FindRoutingRes findRoutingRes = generateRoute(userCoordinate, walkLength, calculatedBoard);
             findRoutingResList.add(findRoutingRes);
             log.info(i + " LINE GENERATION END");
@@ -62,21 +63,28 @@ public class PathService {
     //길 생성 메소드
     //노드 리스트, 거리, 산책 시간 출력
     private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, Board board) throws IOException, ParseException {
-//        while (true) {
+        while (true) {
+            board.reset();
             Node startNode = board.getStartNode(new Node(userCoordinate.getX(), userCoordinate.getY()));
             RouteInfo routeInfo = searchAlgorithm.findRouteByHeuristic(startNode, board);
-            log.info("ROUTEINFO");
-            log.info(routeInfo.toString());
-//            if (isAvailableDistance(walkLength, routeInfo.getDistance())) {
+            if (isAvailableDistance(walkLength, routeInfo.getDistance())) {
                 return FindRoutingRes.from(routeInfo.getDistance(), routeInfo.getRouteCoordinates(), routeInfo.getTime());
-//            }
-//        }
+            }
+        }
     }
 
     //알고리즘 계산 된 distance가 walkLength별로 재탐색 범위 안인지 확인
     private boolean isAvailableDistance(WalkLength walkLength, long distance) {
         AllowanceDistance allowanceDistance = AllowanceDistance.ofWalkLength(walkLength);
         Range range = Range.fromWalkLength(walkLength, allowanceDistance);
+        log.info(allowanceDistance.toString());
+        log.info(range.toString());
+        log.info(String.valueOf(distance));
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return range.inRange(distance);
     }
 
