@@ -22,7 +22,7 @@ public class SearchAlgorithm {
 
     private final TMapService tMapService;
 
-    public RouteInfo findRouteByHeuristic(Node startNode, Board calculatedBoard) throws IOException, ParseException {
+    public RouteInfo findRouteByHeuristic(Node userNode, Node startNode, Board calculatedBoard) throws IOException, ParseException {
         /*
          * step 1 : 상위 30% value 노드 들 중 3개의 경유지 선정
          * step 2 : 경유지 순서 정하기.(value 높은순? or else)
@@ -47,7 +47,8 @@ public class SearchAlgorithm {
 
         //step3, step4 : 3개의 경유지, 1개의 출발지겸 목적지 총 5개의 노드로 전체 경로 생성하여 routeinfo내 저장
         RouteInfo routeInfo = makeRoute(calculatedBoard, startNode, passingNodes);
-
+        routeInfo.getRouteCoordinates().add(0, userNode);
+        routeInfo.getRouteCoordinates().add(userNode);
         //step5 :routeinfo에 있는 List<Node> 기반으로 tmapService 사용하여 결과값 가져와서 response 객체 저장
         setRouteInfoByTmap(routeInfo);
 
@@ -158,7 +159,7 @@ public class SearchAlgorithm {
     private RouteInfo makeRoute(Board board, Node startNode, List<Node> passingNode) {
         List<Node> routeCoordinates = new ArrayList<>();
         passingNode.add(0, startNode); // 출발지 노드로 사용
-        passingNode.add(startNode); // 목적지 노드로 사용
+//        passingNode.add(startNode); // 목적지 노드로 사용
 //        log.info("시작지 + 경유지 + 목적지(시작지) 노드 개수");
 //        log.info(String.valueOf(passingNode.size()));
         for (int i = 0; i < passingNode.size() - 1; i++) {

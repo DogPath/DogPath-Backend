@@ -65,8 +65,12 @@ public class PathService {
     private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, Board board) throws IOException, ParseException {
         while (true) {
             board.reset();
-            Node startNode = board.getStartNode(new Node(userCoordinate.getX(), userCoordinate.getY()));
-            RouteInfo routeInfo = searchAlgorithm.findRouteByHeuristic(startNode, board);
+            Node userNode = new Node(userCoordinate.getX(), userCoordinate.getY());
+            Node startNode = board.getStartNode(userNode);
+            RouteInfo routeInfo = searchAlgorithm.findRouteByHeuristic(userNode, startNode, board);
+            board.printBoard();
+            System.out.println();
+            routeInfo.printRoute();
             if (isAvailableDistance(walkLength, routeInfo.getDistance())) {
                 return FindRoutingRes.from(routeInfo.getDistance(), routeInfo.getRouteCoordinates(), routeInfo.getTime());
             }
@@ -81,7 +85,7 @@ public class PathService {
         log.info(range.toString());
         log.info(String.valueOf(distance));
         try {
-            sleep(3000);
+            sleep(3000); // TODO :삭제 필요
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

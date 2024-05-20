@@ -69,6 +69,28 @@ public class Node {
         return Math.sqrt(x + y);
     }
 
+    public double calculateHaversineDistance(Node node) {
+        double distance;
+        double radius = 6371; // 지구 반지름(km)
+        double toRadian = Math.PI / 180;
+
+        Point centerPoint1 = this.centerPoint;
+        Point centerPoint2 = node.centerPoint;
+
+        double deltaLatitude = Math.abs(centerPoint1.getX() - centerPoint2.getX()) * toRadian;
+        double deltaLongitude = Math.abs(centerPoint1.getY() - centerPoint2.getY()) * toRadian;
+
+        double sinDeltaLat = Math.sin(deltaLatitude / 2);
+        double sinDeltaLng = Math.sin(deltaLongitude / 2);
+        double squareRoot = Math.sqrt(
+                sinDeltaLat * sinDeltaLat +
+                        Math.cos(centerPoint1.getX() * toRadian) * Math.cos(centerPoint2.getX() * toRadian) * sinDeltaLng * sinDeltaLng);
+
+        distance = 2 * radius * Math.asin(squareRoot);
+
+        return distance;
+    }
+
     //휴리스틱 값
     public double getFValue(Node destination) {
         this.heuristicDistance = getValueG() + getValueH(destination);
@@ -82,7 +104,7 @@ public class Node {
 
     //h(n) 값
     private double getValueH(Node destination){
-        return this.calculateEuclidean(destination);
+        return this.calculateHaversineDistance(destination);
     }
 
     @Override

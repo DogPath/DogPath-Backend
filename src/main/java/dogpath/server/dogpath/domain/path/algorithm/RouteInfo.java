@@ -36,4 +36,17 @@ public class RouteInfo {
                 ",\n time=" + time +
                 '}';
     }
+
+    public void printRoute() {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < routeCoordinates.size(); i++) {
+            Node node = routeCoordinates.get(i);
+            sb.append("[").append(i).append("] ")
+                    .append(node.getBoardX())
+                    .append(", ")
+                    .append(node.getBoardY())
+                    .append("\n");
+        }
+        System.out.println(sb);
+    }
 }
