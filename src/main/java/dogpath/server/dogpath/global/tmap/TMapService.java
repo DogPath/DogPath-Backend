@@ -35,7 +35,17 @@ public class TMapService {
             "\"resCoordType\":\"WGS84GEO\"," +
             "\"sort\":\"index\"" +
             "}";
+
     public Response getRouteByTMap(Point startPoint, String startName, Point endPoint, String endName, Point[] passList) throws IOException {
+//        log.info("TMAP Service start & end Point Cooridnate");
+//        log.info(startPoint.getX() + " " + startPoint.getY());
+//        log.info(endPoint.getX() + " " + endPoint.getY());
+//        log.info("TMAP Service PassList Coordinate");
+//        if (passList != null) {
+//            for (Point p : passList) {
+//                log.info(p.getX() + " " + p.getY());
+//            }
+//        }
         OkHttpClient client = new OkHttpClient();
         /*
             startX : 출발지X좌표(경도)
@@ -51,7 +61,7 @@ public class TMapService {
             sort : 정렬 - index(기본값), custom(라인노드, 포인트노드의 순서로 정렬)
 
          */
-        Point point = new Point(1.0,2.0);
+        Point point = new Point(1.0, 2.0);
 
         String encodedStartName = StandardCharsets.UTF_8.encode(startName).toString();
         String encodedEndName = StandardCharsets.UTF_8.encode(endName).toString();
@@ -60,6 +70,8 @@ public class TMapService {
         RequestBody body = RequestBody.create(mediaType,
                 makeBody(startPoint, encodedStartName, endPoint, encodedEndName, passList)
         );
+//        log.info("REQUEST BODY");
+//        log.info(makeBody(startPoint, encodedStartName, endPoint, encodedEndName, passList));
         Request request = new Request.Builder()
                 .url("https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&callback=function")
                 .post(body)
@@ -69,30 +81,40 @@ public class TMapService {
                 .build();
 
         Response response = client.newCall(request).execute();
-        log.info("RESPONSE CODE : " + response.code());
-        log.info("RESPONSE MESSAGE: " + response.body().string());
+//        log.info("RESPONSE CODE : " + response.code());
+//        log.info("RESPONSE MESSAGE: " + response.body().string());
         return response;
     }
 
     private String makeBody(Point startPoint, String startName, Point endPoint, String endName, Point[] passList) {
         String passListString = getPassListBodyString(passList);
-        return String.format(bodyFormat,
-                startPoint.getX(),
+        String body = String.format(bodyFormat,
                 startPoint.getY(),
-                endPoint.getX(),
+                startPoint.getX(),
                 endPoint.getY(),
+                endPoint.getX(),
                 passListString,
                 startName,
                 endName);
+        String replace = body.replaceAll("\"[^\"]+\":\"\",?", "");
+        // JSON 필드가 남아있지 않아서 발생하는 불필요한 쉼표를 제거
+        replace = replace.replaceAll(",\\}", "}")
+                .replaceAll(",\\]", "]")
+                .replaceAll("\\{,", "{")
+                .replaceAll("\\[,", "[");
+        return replace;
     }
 
     private String getPassListBodyString(Point[] passList) {
+        if (passList == null) {
+            return "";
+        }
         StringBuffer sb = new StringBuffer();
         Arrays.stream(passList)
                 .forEach(point -> {
-                    sb.append(point.getX())
+                    sb.append(point.getY())
                             .append(",")
-                            .append(point.getY())
+                            .append(point.getX())
                             .append("_");
                 });
         sb.deleteCharAt(sb.length() - 1);
