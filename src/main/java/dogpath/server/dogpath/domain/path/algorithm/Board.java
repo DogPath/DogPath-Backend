@@ -30,7 +30,6 @@ public class Board {
     }
 
     public Node getStartNode(Node userNode) {
-        //TODO : 시작지 기준 가중치를 비교해야함. 현재는 거리가 짧은 것으로 함
         Node minNode = null;
         double minDistance = Double.MAX_VALUE;
         for (BoardRow br : boardRows) {
