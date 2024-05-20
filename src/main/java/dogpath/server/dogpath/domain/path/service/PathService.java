@@ -15,6 +15,7 @@ import dogpath.server.dogpath.domain.path.dto.FindRoutingRes;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.parser.ParseException;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
@@ -32,39 +33,48 @@ public class PathService {
     private final ScoreCalculator scoreCalculator;
     private final SearchAlgorithm searchAlgorithm;
 
-    public List<FindRoutingRes> findRoute(FindRoutingReq findRoutingReq) throws IOException {
+    /**
+     * 경로 탐색 메서드, 현재 위치를 기반으로 세가지 경로 탐색
+     * @param findRoutingReq : Controller 요청
+     * @return : 경과물 dto 리스트
+     * @throws IOException
+     */
+    public List<FindRoutingRes> findRoute(FindRoutingReq findRoutingReq) throws IOException, ParseException {
         List<FindRoutingRes> findRoutingResList = new ArrayList<>();
-        Point userCoordinate = findRoutingReq.getUserCoordinate();
+        Point userCoordinate = new Point(findRoutingReq.getLatitude(),findRoutingReq.getLongitude());
         String walkTime = findRoutingReq.getWalkTime();
         WalkLength walkLength = WalkLength.valueOf(walkTime);
 
         Board calculatedBoard = getCalculatedBoard(userCoordinate, walkLength);
 
-        //3개의 리스트 탐색해야 함.
-        while (!isCompletedGeneratedRoutes(findRoutingResList)) {
-            FindRoutingRes findRoutingRes = generateRoute(findRoutingReq.getUserCoordinate(), walkLength, calculatedBoard);
+        //3개의 리스트 탐색해야 함
+//        while (!isCompletedGeneratedRoutes(findRoutingResList)) {
+        for (int i = 0; i < 3; i++) {
+            log.info(i + " LINE GENERATION START");
+            calculatedBoard.reset();
+            FindRoutingRes findRoutingRes = generateRoute(userCoordinate, walkLength, calculatedBoard);
             findRoutingResList.add(findRoutingRes);
+            log.info(i + " LINE GENERATION END");
         }
         return findRoutingResList;
     }
 
     //길 생성 메소드
     //노드 리스트, 거리, 산책 시간 출력
-    private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, Board calculatedNodes) throws IOException {
-        while (true) {
-            //TODO : 시작 노드(목적지가 될 노드)를 설정해주어야 함.
-            // 시작지(0,0)기준 근처 노드 중 가장 value가 큰 노드로 할 예정.(이걸 어케 정하누)
-            // Board 객체에 생성하는 메서드가 필요하지 않을까 생각
-            Node userCoordinateNode = new Node(userCoordinate.getX(), userCoordinate.getY());
-            RouteInfo routeInfo = searchAlgorithm.findRouteByHeuristic(userCoordinateNode, calculatedNodes);
-            if (isAvailableDistance(walkLength, routeInfo.getDistance())) {
+    private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, Board board) throws IOException, ParseException {
+//        while (true) {
+            Node startNode = board.getStartNode(new Node(userCoordinate.getX(), userCoordinate.getY()));
+            RouteInfo routeInfo = searchAlgorithm.findRouteByHeuristic(startNode, board);
+            log.info("ROUTEINFO");
+            log.info(routeInfo.toString());
+//            if (isAvailableDistance(walkLength, routeInfo.getDistance())) {
                 return FindRoutingRes.from(routeInfo.getDistance(), routeInfo.getRouteCoordinates(), routeInfo.getTime());
-            }
-        }
+//            }
+//        }
     }
 
     //알고리즘 계산 된 distance가 walkLength별로 재탐색 범위 안인지 확인
-    private boolean isAvailableDistance(WalkLength walkLength, Double distance) {
+    private boolean isAvailableDistance(WalkLength walkLength, long distance) {
         AllowanceDistance allowanceDistance = AllowanceDistance.ofWalkLength(walkLength);
         Range range = Range.fromWalkLength(walkLength, allowanceDistance);
         return range.inRange(distance);
