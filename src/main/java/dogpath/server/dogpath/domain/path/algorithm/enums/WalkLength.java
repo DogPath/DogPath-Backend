@@ -15,7 +15,7 @@ public enum WalkLength {
         this.value = value;
     }
 
-    public int getKm(){
-        return (this.value/5);
+    public int getMeter(){
+        return (this.value/5 * 1000);
     }
 }
