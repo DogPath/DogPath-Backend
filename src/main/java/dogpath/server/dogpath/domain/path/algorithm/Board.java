@@ -35,13 +35,16 @@ public class Board {
         for (BoardRow br : boardRows) {
             List<Node> nodes = br.getNodes();
             for (Node node : nodes) {
-                double distance = node.calculateEuclidean(userNode);
+                double distance = node.calculateHaversineDistance(userNode);
                 if (distance < minDistance) {
                     minNode = node;
                     minDistance = distance;
                 }
             }
         }
+//        log.info("MINVAL");
+//        log.info(String.
+//                valueOf(minNode));
         return minNode;
     }
 
@@ -83,5 +86,13 @@ public class Board {
                     node.isPassingNode = false;
                     node.heuristicDistance = 0.0;
                 });
+    }
+
+    public void printBoard(){
+        for (int i = 0; i < boardRows.size(); i++) {
+            BoardRow br = boardRows.get(i);
+            System.out.println(br.printBoardRow());
+            System.out.println();
+        }
     }
 }
