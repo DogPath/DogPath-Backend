@@ -9,6 +9,7 @@ import org.springframework.data.geo.Point;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindRoutingReq {
-    private Point userCoordinate;
+    private double latitude;
+    private double longitude;
     private String walkTime;
 }

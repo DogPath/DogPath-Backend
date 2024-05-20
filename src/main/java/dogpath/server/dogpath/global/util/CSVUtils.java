@@ -1,4 +1,6 @@
-package dogpath.server.dogpath.domain.path.algorithm;
+package dogpath.server.dogpath.global.util;
+
+import dogpath.server.dogpath.domain.path.algorithm.Node;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -19,7 +21,7 @@ public class CSVUtils {
             for (Object node : nodes) {
                 Node next = (Node) node;
 
-                fw.write(next.centerPoint.getX() + "," + next.centerPoint.getY());
+                fw.write(next.getCenterPoint().getX() + "," + next.getCenterPoint().getY());
                 fw.newLine();
                 resCnt++;
 

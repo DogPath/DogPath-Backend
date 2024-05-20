@@ -11,20 +11,42 @@ import java.util.List;
 @Setter
 public class RouteInfo {
     private List<Node> routeCoordinates;
-    private double distance;
+    private long distance;
     private LocalTime time;
 
     public RouteInfo(List<Node> routeCoordinates) {
         this.routeCoordinates = routeCoordinates;
-        distance = 0.0;
+        distance = 0L;
         time = LocalTime.of(0,0,0);
     }
 
-    public void addDistance(double distance){
+    public void addDistance(long distance){
         this.distance += distance;
     }
 
     public void addTime(long time) {
-        this.time.isAfter(LocalTime.ofSecondOfDay(time));
+        this.time = this.time.plusSeconds(time);
+    }
+
+    @Override
+    public String toString() {
+        return "RouteInfo{" +
+                "distance=" + distance +
+                ",\n routeCoordinates=" + routeCoordinates +
+                ",\n time=" + time +
+                '}';
+    }
+
+    public void printRoute() {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < routeCoordinates.size(); i++) {
+            Node node = routeCoordinates.get(i);
+            sb.append("[").append(i).append("] ")
+                    .append(node.getBoardX())
+                    .append(", ")
+                    .append(node.getBoardY())
+                    .append("\n");
+        }
+        System.out.println(sb);
     }
 }

@@ -1,4 +1,4 @@
-package dogpath.server.dogpath.domain.evaluation.s3;
+package dogpath.server.dogpath.global.s3;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
