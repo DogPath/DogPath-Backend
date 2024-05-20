@@ -84,11 +84,11 @@ public class PathService {
         log.info(allowanceDistance.toString());
         log.info(range.toString());
         log.info(String.valueOf(distance));
-        try {
-            sleep(3000); // TODO :삭제 필요
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            sleep(3000); // TODO :삭제 필요
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
         return range.inRange(distance);
     }
 
