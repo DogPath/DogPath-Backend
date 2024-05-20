@@ -71,8 +71,6 @@ public class Board {
             Node node = getNode(x, y);
             neighborNodes.add(node);
         }
-//        log.info("[NeighborNode Generate Result]");
-//        log.info(neighborNodes.toString());
         return neighborNodes;
     }
 

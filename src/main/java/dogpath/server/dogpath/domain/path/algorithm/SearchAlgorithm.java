@@ -3,6 +3,7 @@ package dogpath.server.dogpath.domain.path.algorithm;
 
 import com.squareup.okhttp.Response;
 import dogpath.server.dogpath.global.tmap.TMapService;
+import dogpath.server.dogpath.global.util.JSONUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ParseException;
@@ -30,7 +31,6 @@ public class SearchAlgorithm {
          * step 5 : 4개의 구간 -> 1개의 경로 변환 및 tmapService 통해서 거리 및 시간 정보 확인
          * step 6 : 결과 리턴
          */
-        List<Point> routePoints = new ArrayList<>();
 
         //step 1
         List<Node> nodes = calculatedBoard.getAllNodes();
@@ -43,7 +43,7 @@ public class SearchAlgorithm {
 
         List<Node> top30ratioNodes = nodes.subList(0, (int) (nodes.size() * 0.3));
         //경유지 목록 생성
-        List<Node> passingNodes = getPassingNodes(top30ratioNodes);
+        List<Node> passingNodes = selectPassingNodes(top30ratioNodes);
 
         //step3, step4 : 3개의 경유지, 1개의 출발지겸 목적지 총 5개의 노드로 전체 경로 생성하여 routeinfo내 저장
         RouteInfo routeInfo = makeRoute(calculatedBoard, startNode, passingNodes);
@@ -77,19 +77,12 @@ public class SearchAlgorithm {
                 endIdx = routeCoordinates.size();
 //                log.info("CHANGE ENDIDX TO " + endIdx);
             }
-            //index : i ~ size-1 == 0
-            //노드가 없음 안돌음.
-            //index : i ~ size-1 == 1 > startIdx == endIdx
-            //이전 노드 출발지, 목적지 현재 i, 경유지 없음
+
             if (remainSize == 1) { // 남은 노드가 1개 뿐이면, 그전에 했던 노드를 시작노드로, 지금 노드롤 도착노드로 설정해서 tamp 서비스 실행
 //                log.info("REAMINE SIZE 1");
 //                log.info("SIZE: " + routeCoordinates.size() + ", " + "i : " + i);
                 startIdx--; // remainSize = 2가 됨.
             }
-            //index : i ~ size-1 == 2
-            //0번 출발지, size-1 목적지, 경유지 없음
-            //index : i ~ size-1 >=3
-            //0번 출발지, size-1 목적지, 경유지 있음
 
             //startIdx -> endIdx - 1 까지 슬라이싱.
             Point[] routePointsForTMap = routeCoordinates.subList(startIdx, endIdx).stream()
@@ -127,7 +120,7 @@ public class SearchAlgorithm {
      * @param top30ratioNode
      * @return
      */
-    private List<Node> getPassingNodes(List<Node> top30ratioNode) {
+    private List<Node> selectPassingNodes(List<Node> top30ratioNode) {
         List<Node> passingNodes = new ArrayList<>();
         while (passingNodes.size() < 3) {
             Node passingNode = getPassingNode(top30ratioNode);
