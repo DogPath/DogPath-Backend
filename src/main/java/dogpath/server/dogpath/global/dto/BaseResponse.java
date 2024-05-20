@@ -7,7 +7,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-import static dogpath.server.dogpath.global.dto.ResponseStatus.SUCCESS;
+import static dogpath.server.dogpath.global.dto.BaseExceptionResponseStatus.SUCCESS;
 
 @Getter
 @JsonPropertyOrder({"code", "status", "message", "timestamp", "result"})
@@ -27,7 +27,7 @@ public class BaseResponse<T> {
         this.timestamp = LocalDateTime.now();
         this.result = result;
     }
-    public BaseResponse(ResponseStatus status) {
+    public BaseResponse(BaseExceptionResponseStatus status) {
         this.code = status.getCode();
         this.status = status.getStatus();
         this.message = status.getMessage();
@@ -35,7 +35,7 @@ public class BaseResponse<T> {
         this.timestamp = LocalDateTime.now();
     }
 
-    public BaseResponse(ResponseStatus status, String message) {
+    public BaseResponse(BaseExceptionResponseStatus status, String message) {
         this.code = status.getCode();
         this.status = status.getStatus();
         this.message = message;

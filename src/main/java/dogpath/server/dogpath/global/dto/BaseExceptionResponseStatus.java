@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum ResponseStatus {
+public enum BaseExceptionResponseStatus {
 
     /**
      * 1000: 요청 성공 (OK)
@@ -28,6 +28,7 @@ public enum ResponseStatus {
     SERVER_ERROR(3000, HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버에서 오류가 발생하였습니다."),
     DATABASE_ERROR(3001, HttpStatus.INTERNAL_SERVER_ERROR.value(), "데이터베이스에서 오류가 발생하였습니다."),
     BAD_SQL_GRAMMAR(3002, HttpStatus.INTERNAL_SERVER_ERROR.value(), "SQL에 오류가 있습니다."),
+    WALK_EVALUATION_NOT_FOUND(3003, HttpStatus.INTERNAL_SERVER_ERROR.value(), "산책 기록의 평가 항목을 찾을 수 없습니다."),
     NOT_DEFINED_ERROR(3999, HttpStatus.INTERNAL_SERVER_ERROR.value(),"정의되지 않은 오류입니다.");
 
     private final int code;
