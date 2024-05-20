@@ -42,6 +42,8 @@ public class ScoreCalculator {
 
     public void initData(double lat, double lng, String walk) {
         board = gridDivider.divideAreaIntoNodes(lat, lng, walk);
+//        log.info("BOARD 생성 정보");
+//        log.info(board.toString());
     }
 
     public HashMap<Weight, List<? extends BaseDataEntity>> getWeightDataFromRepository() {
