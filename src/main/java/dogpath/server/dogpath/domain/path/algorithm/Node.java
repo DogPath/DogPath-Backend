@@ -16,6 +16,8 @@ public class Node {
     double heuristicDistance;
     boolean isVisited;
     boolean isPassingNode;
+    int boardX;
+    int boardY;
 
     // 중심 좌표를 생성자에서 입력 받으면 100m * 100m 노드 생성
     public Node(double lat, double lng) {
@@ -24,6 +26,16 @@ public class Node {
         this.heuristicDistance = 0.0;
         isVisited = false;
         isPassingNode = false;
+    }
+
+    public Node(double lat, double lng, int boardX, int boardY) {
+        calculateNodeArea(lat, lng);
+        this.score = 0.0;
+        this.heuristicDistance = 0.0;
+        isVisited = false;
+        isPassingNode = false;
+        this.boardX = boardX;
+        this.boardY = boardY;
     }
 
     private void calculateNodeArea(double centerLat, double centerLng) {
