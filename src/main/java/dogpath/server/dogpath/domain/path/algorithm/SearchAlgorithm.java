@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -34,9 +36,11 @@ public class SearchAlgorithm {
 
         //step 1
         List<Node> nodes = calculatedBoard.getAllNodes();
+        calculatedBoard.printBoard();
         nodes.sort((node1, node2) -> {
             if (node1.getScore() > node2.getScore()) return -1;
-            else return 1;
+            if (node1.getScore() < node2.getScore()) return 1;
+            return 0;
         });
 //        log.info("전체 노드 정보");
 //        log.info(nodes.toString());
@@ -160,8 +164,8 @@ public class SearchAlgorithm {
         List<Node> routeCoordinates = new ArrayList<>();
         passingNode.add(0, startNode); // 출발지 노드로 사용
 //        passingNode.add(startNode); // 목적지 노드로 사용
-//        log.info("시작지 + 경유지 + 목적지(시작지) 노드 개수");
-//        log.info(String.valueOf(passingNode.size()));
+        log.info("시작지 + 경유지 + 목적지(시작지) 노드 개수");
+        log.info(String.valueOf(passingNode.size()));
         for (int i = 0; i < passingNode.size() - 1; i++) {
             List<Node> sectionRoute = getSectionRoute(board, passingNode.get(i), passingNode.get(i + 1));
             routeCoordinates.addAll(sectionRoute);
@@ -185,6 +189,7 @@ public class SearchAlgorithm {
             List<Node> neighborNode = board.getNeighborNodes(currentNode); // 근처 8개 노드 가져옴)
             currentNode = findNextNode(neighborNode, endNode); // 근처 노드들 중 다음 노드 선택(휴리스틱 알고리즘 통한 노드별 값 측정 및 비교)
             sectionNodes.add(currentNode);
+            log.info(sectionNodes.toString());
 //            log.info("SectionNodes");
 //            log.info(sectionNodes.toString());
         }
@@ -197,9 +202,9 @@ public class SearchAlgorithm {
 
         for (int i = 0; i < neighborNode.size(); i++) {
             Node node = neighborNode.get(i);
-//            if (node.isVisited()) {
-//                continue;
-//            }
+            if (node.isVisited()) {
+                continue;
+            }
             //목적지라면 바로 가기
             if (node.equals(destination)) {
                 node.isVisited = true;
@@ -213,9 +218,18 @@ public class SearchAlgorithm {
                 nextNode = node;
             }
         }
-        //TODO : 모든 이웃 노드들이 isvisited 상태이면 문제 생김.
         if (nextNode == null) {
-            nextNode = neighborNode.get(0);
+            Node minNode = null;
+            double minDisatnce = Double.MAX_VALUE;
+            for (int i = 0; i < neighborNode.size(); i++) {
+                Node node = neighborNode.get(i);
+                double distance = node.calculateHaversineDistance(destination);
+                if (distance < minDisatnce) {
+                    minDisatnce = distance;
+                    minNode = node;
+                }
+            }
+            nextNode = minNode;
         }
         nextNode.isVisited = true;
         return nextNode;
