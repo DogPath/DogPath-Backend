@@ -13,8 +13,8 @@ public class Range {
 
     public static Range fromWalkLength(WalkLength walkLength, AllowanceDistance allowanceDistance) {
         int standardLength = walkLength.getMeter();
-        double minRange = standardLength * (1 - allowanceDistance.getRange());
-        double maxRange = standardLength * (1 + allowanceDistance.getRange());
+        double minRange = standardLength * (1 - allowanceDistance.getRange()/2);
+        double maxRange = standardLength * (1 + allowanceDistance.getRange()*2);
         return new Range(minRange, maxRange);
     }
 
