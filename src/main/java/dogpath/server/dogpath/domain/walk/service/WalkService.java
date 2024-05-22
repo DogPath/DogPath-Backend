@@ -10,6 +10,7 @@ import dogpath.server.dogpath.domain.walk.dto.GetPathRecordResponse;
 import dogpath.server.dogpath.domain.walk.dto.GetPathRecordsResponse;
 import dogpath.server.dogpath.domain.walk.dto.PathRecordDTO;
 import dogpath.server.dogpath.domain.walk.repository.WalkRepository;
+import dogpath.server.dogpath.global.exception.notfound.WalkEvaluationsNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -62,12 +63,15 @@ public class WalkService {
     }
 
 
-    // TODO: 테스트 기능 추가, 예외 처리
     @Transactional
     public HttpStatus deletePathRecordById(Long walkId) {
 
         // WalkEvaluation 가져오기
         List<WalkEvaluation> walkEvaluations = walkEvaluationRepository.findByWalkId(walkId);
+
+        if (walkEvaluations.isEmpty()) {
+            throw new WalkEvaluationsNotFoundException();
+        }
 
         for (WalkEvaluation walkEvaluation : walkEvaluations) {
             Long evalId = walkEvaluation.getEvaluation().getId();
