@@ -2,6 +2,9 @@ package dogpath.server.dogpath.domain.path.algorithm;
 
 
 import com.squareup.okhttp.Response;
+import dogpath.server.dogpath.domain.path.algorithm.enums.AllowanceDistance;
+import dogpath.server.dogpath.domain.path.algorithm.enums.HaversineRange;
+import dogpath.server.dogpath.domain.path.algorithm.enums.WalkLength;
 import dogpath.server.dogpath.global.tmap.TMapService;
 import dogpath.server.dogpath.global.util.JSONUtils;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +27,7 @@ public class SearchAlgorithm {
 
     private final TMapService tMapService;
 
-    public RouteInfo findRouteByHeuristic(Node userNode, Node startNode, Board calculatedBoard) throws IOException, ParseException {
+    public RouteInfo findRouteByHeuristic(Node userNode, Node startNode, Board calculatedBoard, WalkLength walkLength) throws IOException, ParseException {
         /*
          * step 1 : 상위 30% value 노드 들 중 3개의 경유지 선정
          * step 2 : 경유지 순서 정하기.(value 높은순? or else)
@@ -47,8 +50,7 @@ public class SearchAlgorithm {
 
         List<Node> top30ratioNodes = nodes.subList(0, (int) (nodes.size() * 0.3));
         //경유지 목록 생성
-        List<Node> passingNodes = selectPassingNodes(top30ratioNodes);
-
+        List<Node> passingNodes = null;
         //step3, step4 : 3개의 경유지, 1개의 출발지겸 목적지 총 5개의 노드로 전체 경로 생성하여 routeinfo내 저장
         RouteInfo routeInfo = makeRoute(calculatedBoard, startNode, passingNodes);
         routeInfo.getRouteCoordinates().add(0, userNode);
@@ -164,8 +166,8 @@ public class SearchAlgorithm {
         List<Node> routeCoordinates = new ArrayList<>();
         passingNode.add(0, startNode); // 출발지 노드로 사용
 //        passingNode.add(startNode); // 목적지 노드로 사용
-        log.info("시작지 + 경유지 + 목적지(시작지) 노드 개수");
-        log.info(String.valueOf(passingNode.size()));
+//        log.info("시작지 + 경유지 + 목적지(시작지) 노드 개수");
+//        log.info(String.valueOf(passingNode.size()));
         for (int i = 0; i < passingNode.size() - 1; i++) {
             List<Node> sectionRoute = getSectionRoute(board, passingNode.get(i), passingNode.get(i + 1));
             routeCoordinates.addAll(sectionRoute);
@@ -189,7 +191,7 @@ public class SearchAlgorithm {
             List<Node> neighborNode = board.getNeighborNodes(currentNode); // 근처 8개 노드 가져옴)
             currentNode = findNextNode(neighborNode, endNode); // 근처 노드들 중 다음 노드 선택(휴리스틱 알고리즘 통한 노드별 값 측정 및 비교)
             sectionNodes.add(currentNode);
-            log.info(sectionNodes.toString());
+//            log.info(sectionNodes.toString());
 //            log.info("SectionNodes");
 //            log.info(sectionNodes.toString());
         }

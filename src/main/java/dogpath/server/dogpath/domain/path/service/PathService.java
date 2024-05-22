@@ -7,10 +7,9 @@ import dogpath.server.dogpath.domain.path.algorithm.Range;
 import dogpath.server.dogpath.domain.path.algorithm.RouteInfo;
 import dogpath.server.dogpath.domain.path.algorithm.ScoreCalculator;
 import dogpath.server.dogpath.domain.path.algorithm.SearchAlgorithm;
+import dogpath.server.dogpath.domain.path.algorithm.WeightDataManager;
 import dogpath.server.dogpath.domain.path.algorithm.enums.AllowanceDistance;
 import dogpath.server.dogpath.domain.path.algorithm.enums.WalkLength;
-import dogpath.server.dogpath.domain.path.algorithm.enums.Weight;
-import dogpath.server.dogpath.domain.path.domain.BaseDataEntity;
 import dogpath.server.dogpath.domain.path.dto.FindRoutingReq;
 import dogpath.server.dogpath.domain.path.dto.FindRoutingRes;
 import jakarta.transaction.Transactional;
@@ -22,10 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import static java.lang.Thread.sleep;
 
 @Slf4j
 @Service
@@ -44,7 +41,7 @@ public class PathService {
      */
     public List<FindRoutingRes> findRoute(FindRoutingReq findRoutingReq) throws IOException, ParseException {
         List<FindRoutingRes> findRoutingResList = new ArrayList<>();
-        Point userCoordinate = new Point(findRoutingReq.getLatitude(),findRoutingReq.getLongitude());
+        Point userCoordinate = new Point(findRoutingReq.getLatitude(), findRoutingReq.getLongitude());
         String walkTime = findRoutingReq.getWalkTime();
         WalkLength walkLength = WalkLength.valueOf(walkTime);
 
@@ -53,12 +50,12 @@ public class PathService {
 
         //3개의 리스트 탐색해야 함
 //        while (!isCompletedGeneratedRoutes(findRoutingResList)) {
-        for (int i = 0; i < 3; i++) {
-            log.info(i + " LINE GENERATION START");
+//        for (int i = 0; i < 3; i++) {
+//            log.info(i + " LINE GENERATION START");
             FindRoutingRes findRoutingRes = generateRoute(userCoordinate, walkLength, calculatedBoard);
             findRoutingResList.add(findRoutingRes);
-            log.info(i + " LINE GENERATION END");
-        }
+//            log.info(i + " LINE GENERATION END");
+//        }
         return findRoutingResList;
     }
 
@@ -71,12 +68,12 @@ public class PathService {
     //길 생성 메소드
     //노드 리스트, 거리, 산책 시간 출력
     private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, Board board) throws IOException, ParseException {
+        board.printBoard();
         while (true) {
             board.reset();
             Node userNode = new Node(userCoordinate.getX(), userCoordinate.getY());
             Node startNode = board.getStartNode(userNode);
-            RouteInfo routeInfo = searchAlgorithm.findRouteByHeuristic(userNode, startNode, board);
-            board.printBoard();
+            RouteInfo routeInfo = searchAlgorithm.findRouteByHeuristic(userNode, startNode, board, walkLength);
             System.out.println();
             routeInfo.printRoute();
             if (isAvailableDistance(walkLength, routeInfo.getDistance())) {
@@ -104,8 +101,8 @@ public class PathService {
 
     private Board getCalculatedBoard(Point userCoordinate, WalkLength walkLength) {
         scoreCalculator.initData(userCoordinate.getX(), userCoordinate.getY(), walkLength.name());
-        HashMap<Weight, List<? extends BaseDataEntity>> weightDataFromRepository = scoreCalculator.getWeightDataFromRepository();
-        scoreCalculator.calculateNodeScore(weightDataFromRepository);
+        scoreCalculator.calculateNodeScore(WeightDataManager.weightDataMap);
+        BoardMap.addBoard(userCoordinate, walkLength, scoreCalculator.getBoard());
         return scoreCalculator.getBoard();
     }
 }

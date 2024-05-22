@@ -10,6 +10,7 @@ import dogpath.server.dogpath.domain.path.repository.GasStationRepository;
 import dogpath.server.dogpath.domain.path.repository.ParkRepository;
 import dogpath.server.dogpath.domain.path.repository.ParkingLotRepository;
 import dogpath.server.dogpath.domain.path.repository.SecurityRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Slf4j
@@ -26,17 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ScoreCalculator {
 
-    private final CctvRepository cctvRepository;
-    private final ConstructionRepository constructionRepository;
-    private final EmergencyBellRepository emergencyBellRepository;
-    private final FacilityRepository facilityRepository;
-    private final GasStationRepository gasStationRepository;
-    private final ParkRepository parkRepository;
-    private final ParkingLotRepository parkingLotRepository;
-    private final SecurityRepository securityRepository;
-
     private final GridDivider gridDivider;
-
     private Board board;
 
 
@@ -46,24 +38,8 @@ public class ScoreCalculator {
 //        log.info(board.toString());
     }
 
-    public HashMap<Weight, List<? extends BaseDataEntity>> getWeightDataFromRepository() {
-        HashMap<Weight, List<? extends BaseDataEntity>> hashMap = new HashMap<>();
 
-        hashMap.put(Weight.CCTV, cctvRepository.findAll());
-        hashMap.put(Weight.CONSTRUCTION, constructionRepository.findAll());
-        hashMap.put(Weight.EMERGENCY_BELL, emergencyBellRepository.findAll());
-        hashMap.put(Weight.FACILITY, facilityRepository.findAll());
-        hashMap.put(Weight.GAS_STATION, gasStationRepository.findAll());
-        hashMap.put(Weight.PARK, parkRepository.findAll());
-        hashMap.put(Weight.PARKING_LOT, parkingLotRepository.findAll());
-        hashMap.put(Weight.SECURITY, securityRepository.findAll());
-
-        return hashMap;
-    }
-
-
-    //TODO: 로직 수정 or 리팩토링 필요 (score가 private하지 않아야 작동 가능한 로직)
-    public void calculateNodeScore(HashMap<Weight, List<? extends BaseDataEntity>> data) {
+    public void calculateNodeScore(ConcurrentHashMap<Weight, List<? extends BaseDataEntity>> data) {
         double score;
         List<Node> nodes = board.getAllNodes();
         for (Node node : nodes) {
@@ -74,8 +50,6 @@ public class ScoreCalculator {
                         countEntityNumberInNode(node, entry.getValue()),
                         entry.getKey());
             }
-
-            // 개선 방안: score를 private하게 만들고, Node 클래스에 score를 수정하는 로직을 구현한 메서드를 추가할 예정
             node.score = score;
         }
 
