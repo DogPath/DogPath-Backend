@@ -12,7 +12,7 @@ public enum AllowanceDistance {
      */
     SHORT(0.1),
     MEDIUM(0.15),
-    LONG(0.2);
+    LONG(0.25);
 
     private double range;
 
