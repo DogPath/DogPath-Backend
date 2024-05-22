@@ -51,6 +51,11 @@ public class SearchAlgorithm {
         List<Node> top30ratioNodes = nodes.subList(0, (int) (nodes.size() * 0.3));
         //경유지 목록 생성
         List<Node> passingNodes = null;
+        while (!validatePassingNodes(startNode, passingNodes, walkLength)){
+            passingNodes = selectPassingNodes(top30ratioNodes);
+            log.info(passingNodes.toString());
+        }
+        log.info("AFTER SELECTING PASSING NODES");
         //step3, step4 : 3개의 경유지, 1개의 출발지겸 목적지 총 5개의 노드로 전체 경로 생성하여 routeinfo내 저장
         RouteInfo routeInfo = makeRoute(calculatedBoard, startNode, passingNodes);
         routeInfo.getRouteCoordinates().add(0, userNode);
@@ -60,6 +65,34 @@ public class SearchAlgorithm {
 
         //step 6: 결과값 리턴
         return routeInfo;
+    }
+
+    private boolean validatePassingNodes(Node startNode, List<Node> passingNodes, WalkLength walkLength) {
+        if (passingNodes == null) {
+            return false;
+        }
+        List<Node> tempNodes = new ArrayList<>();
+        tempNodes.add(startNode);
+        tempNodes.addAll(passingNodes);
+        tempNodes.add(startNode);
+        double totalDistance = 0.0;
+        for (int i = 0; i < tempNodes.size() - 1; i++) {
+            Node currentNode = tempNodes.get(i);
+            Node nextNode = tempNodes.get(i + 1);
+            totalDistance += currentNode.calculateHaversineDistance(nextNode);
+        }
+        totalDistance *= 1000;
+        log.info("TOTAL DISTANCE");
+        log.info(String.valueOf(totalDistance));
+
+        HaversineRange haversineRange = HaversineRange.fromWalkLength(walkLength);
+        if (haversineRange.inRange(totalDistance)) {
+            return true;
+        }
+        passingNodes.stream()
+                .forEach(node -> node.isPassingNode=false);
+        return false;
+
     }
 
     /**
