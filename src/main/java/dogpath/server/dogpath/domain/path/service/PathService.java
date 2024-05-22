@@ -1,6 +1,7 @@
 package dogpath.server.dogpath.domain.path.service;
 
 import dogpath.server.dogpath.domain.path.algorithm.Board;
+import dogpath.server.dogpath.domain.path.algorithm.BoardMap;
 import dogpath.server.dogpath.domain.path.algorithm.Node;
 import dogpath.server.dogpath.domain.path.algorithm.Range;
 import dogpath.server.dogpath.domain.path.algorithm.RouteInfo;
@@ -47,7 +48,8 @@ public class PathService {
         String walkTime = findRoutingReq.getWalkTime();
         WalkLength walkLength = WalkLength.valueOf(walkTime);
 
-        Board calculatedBoard = getCalculatedBoard(userCoordinate, walkLength);
+//        Board calculatedBoard = getCalculatedBoard(userCoordinate, walkLength);
+        Board calculatedBoard = getCalculatedBoardFromMap(userCoordinate, walkLength);
 
         //3개의 리스트 탐색해야 함
 //        while (!isCompletedGeneratedRoutes(findRoutingResList)) {
@@ -60,6 +62,12 @@ public class PathService {
         return findRoutingResList;
     }
 
+    private Board getCalculatedBoardFromMap(Point userCoordinate, WalkLength walkLength) {
+        if (BoardMap.isContain(userCoordinate, walkLength)) {
+            return BoardMap.getBoard(userCoordinate, walkLength);
+        }
+        return getCalculatedBoard(userCoordinate, walkLength);
+    }
     //길 생성 메소드
     //노드 리스트, 거리, 산책 시간 출력
     private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, Board board) throws IOException, ParseException {
