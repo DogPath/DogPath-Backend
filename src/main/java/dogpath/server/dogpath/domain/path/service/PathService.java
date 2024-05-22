@@ -1,15 +1,8 @@
 package dogpath.server.dogpath.domain.path.service;
 
-import dogpath.server.dogpath.domain.path.algorithm.Board;
-import dogpath.server.dogpath.domain.path.algorithm.Node;
-import dogpath.server.dogpath.domain.path.algorithm.Range;
-import dogpath.server.dogpath.domain.path.algorithm.RouteInfo;
-import dogpath.server.dogpath.domain.path.algorithm.ScoreCalculator;
-import dogpath.server.dogpath.domain.path.algorithm.SearchAlgorithm;
+import dogpath.server.dogpath.domain.path.algorithm.*;
 import dogpath.server.dogpath.domain.path.algorithm.enums.AllowanceDistance;
 import dogpath.server.dogpath.domain.path.algorithm.enums.WalkLength;
-import dogpath.server.dogpath.domain.path.algorithm.enums.Weight;
-import dogpath.server.dogpath.domain.path.domain.BaseDataEntity;
 import dogpath.server.dogpath.domain.path.dto.FindRoutingReq;
 import dogpath.server.dogpath.domain.path.dto.FindRoutingRes;
 import jakarta.transaction.Transactional;
@@ -21,10 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import static java.lang.Thread.sleep;
 
 @Slf4j
 @Service
@@ -43,7 +34,7 @@ public class PathService {
      */
     public List<FindRoutingRes> findRoute(FindRoutingReq findRoutingReq) throws IOException, ParseException {
         List<FindRoutingRes> findRoutingResList = new ArrayList<>();
-        Point userCoordinate = new Point(findRoutingReq.getLatitude(),findRoutingReq.getLongitude());
+        Point userCoordinate = new Point(findRoutingReq.getLatitude(), findRoutingReq.getLongitude());
         String walkTime = findRoutingReq.getWalkTime();
         WalkLength walkLength = WalkLength.valueOf(walkTime);
 
@@ -96,8 +87,7 @@ public class PathService {
 
     private Board getCalculatedBoard(Point userCoordinate, WalkLength walkLength) {
         scoreCalculator.initData(userCoordinate.getX(), userCoordinate.getY(), walkLength.name());
-        HashMap<Weight, List<? extends BaseDataEntity>> weightDataFromRepository = scoreCalculator.getWeightDataFromRepository();
-        scoreCalculator.calculateNodeScore(weightDataFromRepository);
+        scoreCalculator.calculateNodeScore(WeightDataManager.weightDataMap);
         return scoreCalculator.getBoard();
     }
 }
