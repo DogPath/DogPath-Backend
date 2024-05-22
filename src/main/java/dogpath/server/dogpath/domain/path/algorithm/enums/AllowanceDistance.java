@@ -11,8 +11,8 @@ public enum AllowanceDistance {
         짧은 산책 -> 10% / 중간 산책 -> 10% / 긴 산책 -> 10% (조절가능)
      */
     SHORT(0.1),
-    MEDIUM(0.1),
-    LONG(0.1);
+    MEDIUM(0.15),
+    LONG(0.2);
 
     private double range;
 
