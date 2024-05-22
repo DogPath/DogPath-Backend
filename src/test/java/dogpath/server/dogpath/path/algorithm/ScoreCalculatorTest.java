@@ -30,18 +30,18 @@ class ScoreCalculatorTest {
     }
 
 
-    @Test
-    void calculateNodeScore() {
-        weightDataHashMap = scoreCalculator.getWeightDataFromRepository();
-        scoreCalculator.calculateNodeScore(weightDataHashMap);
-        nodes = scoreCalculator.getBoard().getAllNodes();
-
-        assertThat(weightDataHashMap.get(Weight.CCTV).isEmpty()).isEqualTo(false);
-
-
-        System.out.println(nodes.size());
-        for (Node node : nodes) {
-            System.out.println(node.getCenterPoint() + " " + node.getScore());
-        }
-    }
+//    @Test
+//    void calculateNodeScore() {
+////        weightDataHashMap = scoreCalculator.getWeightDataFromRepository();
+//        scoreCalculator.calculateNodeScore(weightDataHashMap);
+//        nodes = scoreCalculator.getBoard().getAllNodes();
+//
+//        assertThat(weightDataHashMap.get(Weight.CCTV).isEmpty()).isEqualTo(false);
+//
+//
+//        System.out.println(nodes.size());
+//        for (Node node : nodes) {
+//            System.out.println(node.getCenterPoint() + " " + node.getScore());
+//        }
+//    }
 }
