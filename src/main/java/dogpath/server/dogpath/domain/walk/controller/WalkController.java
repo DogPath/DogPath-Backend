@@ -25,7 +25,6 @@ public class WalkController {
         return new BaseResponse<>(walkService.getPathRecordsByUserId(userId));
     }
 
-    // TODO: 예외처리
     @DeleteMapping("/{record_id}")
     public ResponseEntity deletePathRecord(@PathVariable("record_id") Long recordId) {
         log.debug("[WalkController.deletePathRecord]");
@@ -36,9 +35,9 @@ public class WalkController {
 
 
     @GetMapping("/{record_id}")
-    public BaseResponse<GetPathRecordResponse> getPathRecordById(@RequestBody GetPathRecordRequest request) {
+    public BaseResponse<GetPathRecordResponse> getPathRecordById(@RequestParam Long userId, @PathVariable("record_id") Long walkId) {
         log.debug("[WalkController.getPathRecordById]");
-        return new BaseResponse<>(walkService.getPathRecord(request));
+        return new BaseResponse<>(walkService.getPathRecord(userId, walkId));
     }
 
 
