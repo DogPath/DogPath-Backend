@@ -14,5 +14,5 @@ public interface WalkRepository extends JpaRepository<Walk, Long> {
     List<Walk> findPathRecordsById(@Param("user_id") Long userId);
 
     @Query("SELECT a FROM Walk a JOIN FETCH a.user u WHERE u.id = :user_id AND a.id = :walk_id")
-    Optional<PathRecordDTO> findPathRecordById(@Param("walk_id") Long walkId, @Param("user_id") Long userId);
+    Optional<Walk> findPathRecordById(@Param("walk_id") Long walkId, @Param("user_id") Long userId);
 }
