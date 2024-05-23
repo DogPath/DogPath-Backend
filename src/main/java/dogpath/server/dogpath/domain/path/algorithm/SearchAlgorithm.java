@@ -66,7 +66,28 @@ public class SearchAlgorithm {
         //step 6: 결과값 리턴
         return routeInfo;
     }
+    public RouteInfo findRouteByHeuristicTest(Node userNode, Node startNode, Board calculatedBoard, WalkLength walkLength) throws IOException, ParseException {
+        List<Node> nodes = calculatedBoard.getAllNodes();
+        calculatedBoard.printBoard();
+        nodes.sort((node1, node2) -> {
+            if (node1.getScore() > node2.getScore()) return -1;
+            if (node1.getScore() < node2.getScore()) return 1;
+            return 0;
+        });
 
+        List<Node> top30ratioNodes = nodes.subList(0, (int) (nodes.size() * 0.3));
+        List<Node> passingNodes = null;
+        while (!validatePassingNodes(startNode, passingNodes, walkLength)){
+            passingNodes = selectPassingNodes(top30ratioNodes);
+            log.info(passingNodes.toString());
+        }
+        log.info("AFTER SELECTING PASSING NODES");
+        RouteInfo routeInfo = makeRoute(calculatedBoard, startNode, passingNodes);
+        routeInfo.getRouteCoordinates().add(0, userNode);
+        routeInfo.getRouteCoordinates().add(userNode);
+
+        return routeInfo;
+    }
     private boolean validatePassingNodes(Node startNode, List<Node> passingNodes, WalkLength walkLength) {
         if (passingNodes == null) {
             return false;

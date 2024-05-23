@@ -35,6 +35,7 @@ public class PathService {
 
     /**
      * 경로 탐색 메서드, 현재 위치를 기반으로 세가지 경로 탐색
+     *
      * @param findRoutingReq : Controller 요청
      * @return : 경과물 dto 리스트
      * @throws IOException
@@ -52,11 +53,38 @@ public class PathService {
 //        while (!isCompletedGeneratedRoutes(findRoutingResList)) {
 //        for (int i = 0; i < 3; i++) {
 //            log.info(i + " LINE GENERATION START");
-            FindRoutingRes findRoutingRes = generateRoute(userCoordinate, walkLength, calculatedBoard);
-            findRoutingResList.add(findRoutingRes);
+        FindRoutingRes findRoutingRes = generateRoute(userCoordinate, walkLength, calculatedBoard);
+        findRoutingResList.add(findRoutingRes);
 //            log.info(i + " LINE GENERATION END");
 //        }
         return findRoutingResList;
+    }
+
+    public List<FindRoutingRes> findRouteTest(FindRoutingReq findRoutingReq) throws IOException, ParseException {
+        List<FindRoutingRes> findRoutingResList = new ArrayList<>();
+        Point userCoordinate = new Point(findRoutingReq.getLatitude(), findRoutingReq.getLongitude());
+        String walkTime = findRoutingReq.getWalkTime();
+        WalkLength walkLength = WalkLength.valueOf(walkTime);
+
+        Board calculatedBoard = getCalculatedBoardFromMap(userCoordinate, walkLength);
+
+        //3개의 리스트 탐색해야 함
+        FindRoutingRes findRoutingRes = generateRouteTest(userCoordinate, walkLength, calculatedBoard);
+        findRoutingResList.add(findRoutingRes);
+        return findRoutingResList;
+    }
+
+    private FindRoutingRes generateRouteTest(Point userCoordinate, WalkLength walkLength, Board board) throws IOException, ParseException {
+        board.printBoard();
+        while (true) {
+            board.reset();
+            Node userNode = new Node(userCoordinate.getX(), userCoordinate.getY());
+            Node startNode = board.getStartNode(userNode);
+            RouteInfo routeInfo = searchAlgorithm.findRouteByHeuristicTest(userNode, startNode, board, walkLength);
+            System.out.println();
+            routeInfo.printRoute();
+            return FindRoutingRes.from(routeInfo.getDistance(), routeInfo.getRouteCoordinates(), routeInfo.getTime());
+        }
     }
 
     private Board getCalculatedBoardFromMap(Point userCoordinate, WalkLength walkLength) {
@@ -65,6 +93,7 @@ public class PathService {
         }
         return getCalculatedBoard(userCoordinate, walkLength);
     }
+
     //길 생성 메소드
     //노드 리스트, 거리, 산책 시간 출력
     private FindRoutingRes generateRoute(Point userCoordinate, WalkLength walkLength, Board board) throws IOException, ParseException {

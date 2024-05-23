@@ -29,4 +29,9 @@ public class PathController {
     public ResponseEntity<List<FindRoutingRes>> getRoute(@RequestBody FindRoutingReq findRoutingReq) throws IOException, ParseException {
         return ResponseEntity.ok(pathService.findRoute(findRoutingReq));
     }
+
+    @PostMapping("/routing/test")
+    public ResponseEntity<List<FindRoutingRes>> getRouteTest(@RequestBody FindRoutingReq findRoutingReq) throws IOException, ParseException {
+        return ResponseEntity.ok(pathService.findRouteTest(findRoutingReq));
+    }
 }
