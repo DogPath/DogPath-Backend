@@ -5,6 +5,7 @@ import dogpath.server.dogpath.domain.evaluation.domain.WalkEvaluation;
 import dogpath.server.dogpath.domain.evaluation.domain.WalkEvaluationId;
 import dogpath.server.dogpath.domain.evaluation.repository.EvaluationRepository;
 import dogpath.server.dogpath.domain.evaluation.repository.WalkEvaluationRepository;
+import dogpath.server.dogpath.domain.walk.domain.Walk;
 import dogpath.server.dogpath.domain.walk.dto.GetPathRecordRequest;
 import dogpath.server.dogpath.domain.walk.dto.GetPathRecordResponse;
 import dogpath.server.dogpath.domain.walk.dto.GetPathRecordsResponse;
@@ -39,12 +40,16 @@ public class WalkService {
     }
 
 
-    public GetPathRecordResponse getPathRecord(GetPathRecordRequest request) {
+    public GetPathRecordResponse getPathRecord(Long userId, Long walkId) {
         log.debug("[WalkService.getPathRecord]");
-        PathRecordDTO pathRecord = walkRepository.findPathRecordById(request.getWalkId(), request.getUserId())
+        Walk walk = walkRepository.findPathRecordById(walkId, userId)
                 .orElseThrow(IllegalArgumentException::new);
+
+        PathRecordDTO pathRecord = new PathRecordDTO(walk);
+
         List<WalkEvaluation> walkEvaluations = walkEvaluationRepository.findByWalkId(pathRecord.getWalkId());
         String evaluationStr = String.join(",", getEvaluationList(walkEvaluations));
+
         pathRecord.setEvaluations(evaluationStr);
 
         return new GetPathRecordResponse(pathRecord);
