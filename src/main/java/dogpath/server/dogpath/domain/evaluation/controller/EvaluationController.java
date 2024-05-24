@@ -1,6 +1,7 @@
 package dogpath.server.dogpath.domain.evaluation.controller;
 
 import dogpath.server.dogpath.domain.evaluation.dto.EvaluateRouteReq;
+import dogpath.server.dogpath.domain.evaluation.dto.EvaluateRouteReq2;
 import dogpath.server.dogpath.domain.evaluation.service.EvaluationService;
 import dogpath.server.dogpath.global.dto.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,14 @@ public class EvaluationController {
     @PostMapping("/records")
     public ResponseEntity evaluate(@RequestPart(name = "request") EvaluateRouteReq evaluateRouteReq, @RequestPart(name = "routeImg") MultipartFile routeImg) throws IOException {
         HttpStatus httpStatus = evaluationService.evaluateRoute(evaluateRouteReq, routeImg);
+        return ResponseEntity.status(httpStatus.value())
+                .build();
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/records2")
+    public ResponseEntity evaluate2(@RequestBody EvaluateRouteReq2 evaluateRouteReq) throws IOException {
+        HttpStatus httpStatus = evaluationService.evaluateRoute2(evaluateRouteReq);
         return ResponseEntity.status(httpStatus.value())
                 .build();
     }

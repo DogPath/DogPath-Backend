@@ -3,6 +3,7 @@ package dogpath.server.dogpath.domain.evaluation.service;
 import dogpath.server.dogpath.domain.evaluation.domain.Evaluation;
 import dogpath.server.dogpath.domain.evaluation.domain.WalkEvaluation;
 import dogpath.server.dogpath.domain.evaluation.dto.EvaluateRouteReq;
+import dogpath.server.dogpath.domain.evaluation.dto.EvaluateRouteReq2;
 import dogpath.server.dogpath.domain.evaluation.repository.EvaluationRepository;
 import dogpath.server.dogpath.domain.evaluation.repository.WalkEvaluationRepository;
 import dogpath.server.dogpath.global.s3.S3Service;
@@ -44,6 +45,41 @@ public class EvaluationService {
 
         //사진 저장
         String imageURL = s3Service.s3UpLoad(routeImage);
+
+        //산책 테이블 저장
+        Walk walk = Walk.builder()
+                .distance(BigDecimal.valueOf(evaluateRouteReq.getDistance()))
+                .imageURL(imageURL)
+                .time(LocalTime.parse(evaluateRouteReq.getTime()))
+                .user(user)
+                .build();
+
+        walkRepository.save(walk);
+
+        //산책령가 조인 테이블 저장
+        List<Evaluation> evaluations = makeEvaluations(evaluateRouteReq.getEvaluations());
+        List<WalkEvaluation> walkEvaluations = evaluations.stream()
+                .map(e -> new WalkEvaluation(e, walk))
+                .collect(Collectors.toList());
+        walkEvaluationRepository.saveAll(walkEvaluations);
+
+        //호감도 조절
+        Preference preference = user.getPreference();
+        evaluations.stream()
+                .forEach(preference::updateEvaluation);
+        preferenceRepository.save(preference);
+
+        return HttpStatus.CREATED;
+    }
+
+    public HttpStatus evaluateRoute2(EvaluateRouteReq2 evaluateRouteReq) throws IOException {
+        //유저 찾기
+        Long userId = 1L;
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        //사진 저장
+        String imageURL = evaluateRouteReq.getImageUrl();
 
         //산책 테이블 저장
         Walk walk = Walk.builder()
