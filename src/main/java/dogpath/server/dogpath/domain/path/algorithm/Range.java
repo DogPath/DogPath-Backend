@@ -3,9 +3,11 @@ package dogpath.server.dogpath.domain.path.algorithm;
 import dogpath.server.dogpath.domain.path.algorithm.enums.AllowanceDistance;
 import dogpath.server.dogpath.domain.path.algorithm.enums.WalkLength;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.ToString;
 
 @ToString
+@Getter
 @AllArgsConstructor
 public class Range {
     private double min;

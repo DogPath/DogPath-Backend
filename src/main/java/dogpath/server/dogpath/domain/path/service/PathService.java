@@ -20,8 +20,10 @@ import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 @Slf4j
@@ -68,10 +70,30 @@ public class PathService {
 
         Board calculatedBoard = getCalculatedBoardFromMap(userCoordinate, walkLength);
 
+        Random random = new Random();
         //3개의 리스트 탐색해야 함
         FindRoutingRes findRoutingRes = generateRouteTest(userCoordinate, walkLength, calculatedBoard);
+        AllowanceDistance allowanceDistance = AllowanceDistance.ofWalkLength(walkLength);
+        Range range = Range.fromWalkLength(walkLength, allowanceDistance);
+
+        double minDistance = range.getMin();
+        double maxDistance = range.getMax();
+        Long distance = (long) (minDistance + (maxDistance - minDistance) * random.nextDouble());
+        LocalTime time = calculateTime(distance, 4); // Assume average walking speed of 4 km/h
+
+        findRoutingRes.setDistance(distance);
+        findRoutingRes.setTime(time);
+
         findRoutingResList.add(findRoutingRes);
         return findRoutingResList;
+    }
+
+    private static LocalTime calculateTime(long distance, int speedKmPerHour) {
+        double timeInHours = (double) distance / 1000 / speedKmPerHour;
+        int hours = (int) timeInHours;
+        int minutes = (int) ((timeInHours - hours) * 60);
+        int seconds = (int) ((((timeInHours - hours) * 60) - minutes) * 60);
+        return LocalTime.of(hours, minutes, seconds);
     }
 
     private FindRoutingRes generateRouteTest(Point userCoordinate, WalkLength walkLength, Board board) throws IOException, ParseException {

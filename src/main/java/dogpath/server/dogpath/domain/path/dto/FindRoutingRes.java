@@ -4,12 +4,14 @@ import dogpath.server.dogpath.domain.path.algorithm.Node;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.geo.Point;
 
 import java.time.LocalTime;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class FindRoutingRes {
     private List<Point> routeCoordinates;
